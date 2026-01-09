@@ -1,30 +1,31 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { 
   Check, Globe, Eye, EyeOff, TrendingUp, 
   Building2, Target, MapPin, Filter, 
   Shield, Users, ArrowRight, AlertCircle,
   Briefcase,
-  DollarSign
+  DollarSign,
+  Loader2
 } from 'lucide-react';
 
 export default function InvestorSetup() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [profileData, setProfileData] = useState<any>(null);
 
-  // Color variables following 60-30-10 rule
   const colorScheme = {
-    primary: '#0F0F0F',       // 60% - Dominant (Dark Charcoal)
-    secondary: '#4B5563',     // 30% - Secondary (Cool Gray)
-    accent: '#6366F1',        // 10% - Accent (Indigo)
-    background: '#F9FAFB',    // Background
-    surface: '#FFFFFF',       // Surface
-    border: '#E5E7EB',        // Border
-    success: '#10B981',       // Success Green
-    warning: '#F59E0B'        // Warning Amber
+    primary: '#0F0F0F',
+    secondary: '#4B5563',
+    accent: '#6366F1',
+    background: '#F9FAFB',
+    surface: '#FFFFFF',
+    border: '#E5E7EB',
+    success: '#10B981',
+    warning: '#F59E0B'
   };
 
   const [form, setForm] = useState({
@@ -114,6 +115,21 @@ export default function InvestorSetup() {
     '15+ years'
   ];
 
+  // Load saved profile data
+  useEffect(() => {
+    const savedData = localStorage.getItem('profileData');
+    if (savedData) {
+      const data = JSON.parse(savedData);
+      setProfileData(data);
+      
+      // Load saved investor preferences if exists
+      const investorPrefs = localStorage.getItem('investorPrefs');
+      if (investorPrefs) {
+        setForm(JSON.parse(investorPrefs));
+      }
+    }
+  }, []);
+
   const handleIndustryToggle = (industry: string) => {
     setForm(prev => ({
       ...prev,
@@ -159,6 +175,9 @@ export default function InvestorSetup() {
 
     setLoading(true);
 
+    // Save investor preferences
+    localStorage.setItem('investorPrefs', JSON.stringify(form));
+
     // Combine data
     const savedData = JSON.parse(localStorage.getItem('profileData') || '{}');
     const completeData = {
@@ -166,31 +185,32 @@ export default function InvestorSetup() {
       ...form,
       type: 'investor',
       completed: true,
-      createdAt: new Date().toISOString()
+      completedAt: new Date().toISOString(),
+      profileCompleted: true
     };
 
-    console.log('Saving investor:', completeData);
+    // Save complete profile
+    localStorage.setItem('completeProfile', JSON.stringify(completeData));
+    
+    // Simulate API call
     await new Promise(resolve => setTimeout(resolve, 1500));
     
+    // Clear setup data
     localStorage.removeItem('profileData');
+    localStorage.removeItem('selectedRole');
+    localStorage.removeItem('investorPrefs');
+    
+    // Redirect to dashboard
     router.push('/dashboard');
   };
 
-  // Helper function to get accent color class
-  const getAccentColorClass = (isSelected: boolean) => {
-    if (isSelected) {
-      return {
-        border: `border-[${colorScheme.accent}]`,
-        bg: `bg-[${colorScheme.accent}]/5`,
-        text: `text-[${colorScheme.accent}]`
-      };
-    }
-    return {
-      border: 'border-gray-200',
-      bg: 'bg-white',
-      text: 'text-gray-600'
-    };
-  };
+  if (!profileData) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: colorScheme.background }}>
@@ -322,9 +342,8 @@ export default function InvestorSetup() {
                   )}
                 </div>
 
-                {/* Experience & Portfolio Size */}
+                {/* Experience & Check Size */}
                 <div className="grid md:grid-cols-2 gap-6">
-                  {/* Experience */}
                   <div className="space-y-3">
                     <label className="flex items-center gap-2 font-semibold text-sm text-gray-700">
                       <TrendingUp className="w-4 h-4" />
@@ -348,7 +367,6 @@ export default function InvestorSetup() {
                     )}
                   </div>
 
-                  {/* Investment Range */}
                   <div className="space-y-3">
                     <label className="flex items-center gap-2 font-semibold text-sm text-gray-700">
                       <DollarSign className="w-4 h-4" />
@@ -423,7 +441,6 @@ export default function InvestorSetup() {
 
                 {/* Stage & Geography */}
                 <div className="grid md:grid-cols-2 gap-6">
-                  {/* Preferred Stage */}
                   <div className="space-y-3">
                     <label className="flex items-center gap-2 font-semibold text-sm text-gray-700">
                       <Target className="w-4 h-4" />
@@ -455,7 +472,6 @@ export default function InvestorSetup() {
                     )}
                   </div>
 
-                  {/* Geography */}
                   <div className="space-y-3">
                     <label className="flex items-center gap-2 font-semibold text-sm text-gray-700">
                       <MapPin className="w-4 h-4" />
@@ -488,7 +504,6 @@ export default function InvestorSetup() {
                   </div>
 
                   <div className="space-y-4">
-                    {/* Allow Pitches */}
                     <div className="flex items-center justify-between p-4 bg-gray-50 border border-gray-200 rounded-lg">
                       <div>
                         <p className="font-medium text-gray-900">
@@ -512,7 +527,6 @@ export default function InvestorSetup() {
                       </button>
                     </div>
 
-                    {/* Show Publicly */}
                     <div className="flex items-center justify-between p-4 bg-gray-50 border border-gray-200 rounded-lg">
                       <div>
                         <p className="font-medium text-gray-900">
@@ -550,19 +564,6 @@ export default function InvestorSetup() {
                       type="submit"
                       disabled={loading}
                       className="px-8 py-3 font-semibold rounded-lg transition-all duration-300 shadow-sm hover:shadow-md flex items-center justify-center gap-2 group min-w-[200px] bg-blue-600 text-white hover:bg-blue-700"
-                      style={{ 
-                        opacity: loading ? 0.7 : 1
-                      }}
-                      onMouseEnter={(e) => {
-                        if (!loading) {
-                          e.currentTarget.style.transform = 'translateY(-2px)';
-                        }
-                      }}
-                      onMouseLeave={(e) => {
-                        if (!loading) {
-                          e.currentTarget.style.transform = 'translateY(0)';
-                        }
-                      }}
                     >
                       {loading ? (
                         <>
@@ -582,10 +583,9 @@ export default function InvestorSetup() {
             </div>
           </div>
 
-          {/* Right Column - Preview & Stats */}
+          {/* Right Column - Preview */}
           <div className="lg:col-span-1">
             <div className="sticky top-8 space-y-6">
-              {/* Profile Preview */}
               <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
                 <div className="mb-6">
                   <h3 className="text-lg font-bold text-gray-900 mb-2">
@@ -595,7 +595,6 @@ export default function InvestorSetup() {
                 </div>
 
                 <div className="space-y-4">
-                  {/* Type Badge */}
                   <div className="p-3 bg-blue-50 border border-blue-100 rounded-lg">
                     <div className="flex items-center gap-2">
                       <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
@@ -608,7 +607,6 @@ export default function InvestorSetup() {
                     </div>
                   </div>
 
-                  {/* Stats */}
                   <div className="grid grid-cols-2 gap-3">
                     <div className="p-3 bg-gray-50 rounded-lg border border-gray-100">
                       <p className="text-xs text-gray-400 mb-1">Check Size</p>
@@ -636,7 +634,6 @@ export default function InvestorSetup() {
                     </div>
                   </div>
 
-                  {/* Geography */}
                   <div className="p-3 bg-gray-50 rounded-lg border border-gray-100">
                     <div className="flex items-center gap-2 mb-2">
                       <MapPin className="w-4 h-4 text-gray-400" />
@@ -649,7 +646,6 @@ export default function InvestorSetup() {
                 </div>
               </div>
 
-              {/* Benefits Card */}
               <div className="p-5 rounded-xl border border-blue-100 bg-blue-50/50">
                 <div className="flex items-start gap-3">
                   <div className="w-6 h-6 rounded flex items-center justify-center bg-blue-600">

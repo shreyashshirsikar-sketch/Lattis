@@ -2,22 +2,21 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { User, Rocket, TrendingUp, ChevronRight, Check, ArrowRight, Sparkles } from 'lucide-react';
+import { User, Rocket, TrendingUp, Check, ArrowRight, Sparkles } from 'lucide-react';
 
 export default function RoleSelection() {
   const router = useRouter();
   const [selectedRole, setSelectedRole] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  // Color variables following 60-30-10 rule
   const colorScheme = {
-    primary: '#0F0F0F',       // 60% - Dominant (Dark Charcoal)
-    secondary: '#4B5563',     // 30% - Secondary (Cool Gray)
-    accent: '#6366F1',        // 10% - Accent (Indigo)
-    background: '#F9FAFB',    // Background
-    surface: '#FFFFFF',       // Surface
-    border: '#E5E7EB',        // Border
-    success: '#10B981'        // Success Green
+    primary: '#0F0F0F',
+    secondary: '#4B5563',
+    accent: '#6366F1',
+    background: '#F9FAFB',
+    surface: '#FFFFFF',
+    border: '#E5E7EB',
+    success: '#10B981'
   };
 
   const roles = [
@@ -50,7 +49,14 @@ export default function RoleSelection() {
   const handleContinue = () => {
     if (!selectedRole) return;
     setLoading(true);
-    // Simulate API call delay
+    
+    // Save role selection to localStorage
+    localStorage.setItem('selectedRole', selectedRole);
+    
+    // Clear any existing profile data
+    localStorage.removeItem('profileData');
+    
+    // Redirect to basic profile with role parameter
     setTimeout(() => {
       router.push(`/profile-setup/basic?role=${selectedRole}`);
     }, 500);
@@ -152,7 +158,6 @@ export default function RoleSelection() {
                         }
                       `}
                     >
-                      {/* Selection Indicator */}
                       {isSelected && (
                         <div className="absolute -top-2 -right-2 w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center shadow-md">
                           <Check className="w-4 h-4 text-white" />
@@ -160,7 +165,6 @@ export default function RoleSelection() {
                       )}
 
                       <div className="space-y-4">
-                        {/* Icon & Title */}
                         <div className="flex items-center gap-3">
                           <div className={`w-12 h-12 rounded-lg flex items-center justify-center ${
                             isSelected ? 'bg-blue-100' : 'bg-gray-100'
@@ -179,12 +183,10 @@ export default function RoleSelection() {
                           </div>
                         </div>
 
-                        {/* Description */}
                         <p className="text-sm leading-relaxed" style={{ color: colorScheme.secondary }}>
                           {role.desc}
                         </p>
 
-                        {/* Features */}
                         <div className="space-y-2 pt-3 border-t border-gray-100">
                           <p className="text-xs font-medium text-gray-400 uppercase">Features include:</p>
                           <div className="flex flex-wrap gap-2">
@@ -218,16 +220,6 @@ export default function RoleSelection() {
                   style={{ 
                     backgroundColor: selectedRole ? colorScheme.accent : '#E5E7EB',
                     color: 'white'
-                  }}
-                  onMouseEnter={(e) => {
-                    if (selectedRole) {
-                      e.currentTarget.style.transform = 'translateY(-2px)';
-                    }
-                  }}
-                  onMouseLeave={(e) => {
-                    if (selectedRole) {
-                      e.currentTarget.style.transform = 'translateY(0)';
-                    }
                   }}
                 >
                   {loading ? (
@@ -276,7 +268,6 @@ export default function RoleSelection() {
           {/* Right Column - Preview & Details */}
           <div className="lg:col-span-1">
             <div className="sticky top-8">
-              {/* Selected Role Preview */}
               <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm mb-6">
                 <div className="mb-6">
                   <h3 className="text-lg font-bold mb-2" style={{ color: colorScheme.primary }}>
@@ -320,7 +311,6 @@ export default function RoleSelection() {
                       </div>
                     </div>
 
-                    {/* Stats Preview */}
                     <div className="p-5 rounded-lg border border-gray-100">
                       <h5 className="text-sm font-medium mb-4" style={{ color: colorScheme.primary }}>
                         Community Overview
@@ -349,7 +339,6 @@ export default function RoleSelection() {
                 )}
               </div>
 
-              {/* Next Steps */}
               <div className="p-5 rounded-xl border" 
                    style={{ 
                      backgroundColor: `${colorScheme.accent}05`,

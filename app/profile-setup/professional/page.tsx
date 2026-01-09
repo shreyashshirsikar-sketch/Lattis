@@ -6,7 +6,8 @@ import {
   Check, Plus, X, Upload, Link, 
   Briefcase, GraduationCap, Target, 
   FileText, Globe, Award, ArrowRight,
-  AlertCircle, UserCheck
+  AlertCircle, UserCheck,
+  Loader2
 } from 'lucide-react';
 
 export default function ProfessionalSetup() {
@@ -15,8 +16,8 @@ export default function ProfessionalSetup() {
   const [skillInput, setSkillInput] = useState('');
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [profileData, setProfileData] = useState<any>(null);
 
-  // Color variables following 60-30-10 rule
   const colorScheme = {
     primary: '#0F0F0F',
     secondary: '#4B5563',
@@ -67,11 +68,19 @@ export default function ProfessionalSetup() {
 
   // Load saved data
   useEffect(() => {
-    const saved = localStorage.getItem('profileData');
-    if (saved) {
-      const data = JSON.parse(saved);
-      setSkills(data.skills || []);
+    const savedData = localStorage.getItem('profileData');
+    if (savedData) {
+      const data = JSON.parse(savedData);
+      setProfileData(data);
       if (data.location) setForm(prev => ({ ...prev, location: data.location }));
+      
+      // Load saved professional prefs if exists
+      const proPrefs = localStorage.getItem('professionalPrefs');
+      if (proPrefs) {
+        const prefs = JSON.parse(proPrefs);
+        setForm(prefs.form);
+        setSkills(prefs.skills || []);
+      }
     }
   }, []);
 
@@ -160,6 +169,9 @@ export default function ProfessionalSetup() {
 
     setLoading(true);
 
+    // Save professional preferences
+    localStorage.setItem('professionalPrefs', JSON.stringify({ form, skills }));
+
     // Combine all data
     const savedData = JSON.parse(localStorage.getItem('profileData') || '{}');
     const completeData = {
@@ -168,20 +180,32 @@ export default function ProfessionalSetup() {
       skills,
       type: 'professional',
       completed: true,
-      createdAt: new Date().toISOString()
+      completedAt: new Date().toISOString(),
+      profileCompleted: true
     };
 
-    console.log('Saving professional profile:', completeData);
+    // Save complete profile
+    localStorage.setItem('completeProfile', JSON.stringify(completeData));
     
     // Simulate API call
     await new Promise(resolve => setTimeout(resolve, 1500));
     
-    // Clear localStorage
+    // Clear setup data
     localStorage.removeItem('profileData');
+    localStorage.removeItem('selectedRole');
+    localStorage.removeItem('professionalPrefs');
     
     // Redirect to dashboard
     router.push('/dashboard');
   };
+
+  if (!profileData) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: colorScheme.background }}>
@@ -325,7 +349,6 @@ export default function ProfessionalSetup() {
                     </button>
                   </div>
                   
-                  {/* Skills Display */}
                   <div className="flex flex-wrap gap-2">
                     {skills.map((skill) => (
                       <div
@@ -399,7 +422,6 @@ export default function ProfessionalSetup() {
 
                 {/* Portfolio & Resume */}
                 <div className="grid md:grid-cols-2 gap-6">
-                  {/* Portfolio Links */}
                   <div className="space-y-3">
                     <div className="flex items-center justify-between">
                       <label className="flex items-center gap-2 font-semibold text-sm text-gray-700">
@@ -438,7 +460,6 @@ export default function ProfessionalSetup() {
                     )}
                   </div>
 
-                  {/* Resume Upload */}
                   <div className="space-y-3">
                     <label className="flex items-center gap-2 font-semibold text-sm text-gray-700">
                       <FileText className="w-4 h-4" />
@@ -501,17 +522,6 @@ export default function ProfessionalSetup() {
                       type="submit"
                       disabled={loading}
                       className="px-8 py-3 font-semibold rounded-lg transition-all duration-300 shadow-sm hover:shadow-md flex items-center justify-center gap-2 group min-w-[200px] bg-blue-600 text-white hover:bg-blue-700"
-                      style={{ opacity: loading ? 0.7 : 1 }}
-                      onMouseEnter={(e) => {
-                        if (!loading) {
-                          e.currentTarget.style.transform = 'translateY(-2px)';
-                        }
-                      }}
-                      onMouseLeave={(e) => {
-                        if (!loading) {
-                          e.currentTarget.style.transform = 'translateY(0)';
-                        }
-                      }}
                     >
                       {loading ? (
                         <>
@@ -531,10 +541,9 @@ export default function ProfessionalSetup() {
             </div>
           </div>
 
-          {/* Right Column - Preview & Stats */}
+          {/* Right Column - Preview */}
           <div className="lg:col-span-1">
             <div className="sticky top-8 space-y-6">
-              {/* Profile Preview */}
               <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
                 <div className="mb-6">
                   <h3 className="text-lg font-bold text-gray-900 mb-2">
@@ -544,7 +553,6 @@ export default function ProfessionalSetup() {
                 </div>
 
                 <div className="space-y-4">
-                  {/* Role Badge */}
                   <div className="p-3 bg-blue-50 border border-blue-100 rounded-lg">
                     <div className="flex items-center gap-2">
                       <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
@@ -554,7 +562,6 @@ export default function ProfessionalSetup() {
                     </div>
                   </div>
 
-                  {/* Stats Grid */}
                   <div className="grid grid-cols-2 gap-3">
                     <div className="p-3 bg-gray-50 rounded-lg border border-gray-100">
                       <p className="text-xs text-gray-400 mb-1">Experience</p>
@@ -582,7 +589,6 @@ export default function ProfessionalSetup() {
                     </div>
                   </div>
 
-                  {/* Skills Preview */}
                   <div className="p-3 bg-gray-50 rounded-lg border border-gray-100">
                     <div className="flex items-center gap-2 mb-2">
                       <Target className="w-4 h-4 text-gray-400" />
@@ -604,7 +610,6 @@ export default function ProfessionalSetup() {
                 </div>
               </div>
 
-              {/* Benefits Card */}
               <div className="p-5 rounded-xl border border-blue-100 bg-blue-50/50">
                 <div className="flex items-start gap-3">
                   <div className="w-6 h-6 rounded flex items-center justify-center bg-blue-600">

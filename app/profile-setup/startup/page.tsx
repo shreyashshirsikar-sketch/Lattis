@@ -1,21 +1,22 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { 
   Check, Plus, Upload, Link, 
   Building2, Target, Calendar,
   Globe, Image as ImageIcon, Rocket,
   ArrowRight, AlertCircle, Users,
-  TrendingUp, Briefcase
+  TrendingUp, Briefcase,
+  Loader2
 } from 'lucide-react';
 
 export default function StartupSetup() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [profileData, setProfileData] = useState<any>(null);
 
-  // Color variables following 60-30-10 rule
   const colorScheme = {
     primary: '#0F0F0F',
     secondary: '#4B5563',
@@ -91,6 +92,21 @@ export default function StartupSetup() {
     { id: 'partners', label: 'Find partners', desc: 'Strategic partnerships and collaborations' }
   ];
 
+  // Load saved data
+  useEffect(() => {
+    const savedData = localStorage.getItem('profileData');
+    if (savedData) {
+      const data = JSON.parse(savedData);
+      setProfileData(data);
+      
+      // Load saved startup prefs if exists
+      const startupPrefs = localStorage.getItem('startupPrefs');
+      if (startupPrefs) {
+        setForm(JSON.parse(startupPrefs));
+      }
+    }
+  }, []);
+
   const handleGoalToggle = (goal: string) => {
     setForm(prev => ({
       ...prev,
@@ -158,6 +174,9 @@ export default function StartupSetup() {
 
     setLoading(true);
 
+    // Save startup preferences
+    localStorage.setItem('startupPrefs', JSON.stringify(form));
+
     // Combine data
     const savedData = JSON.parse(localStorage.getItem('profileData') || '{}');
     const completeData = {
@@ -165,15 +184,32 @@ export default function StartupSetup() {
       ...form,
       type: 'startup',
       completed: true,
-      createdAt: new Date().toISOString()
+      completedAt: new Date().toISOString(),
+      profileCompleted: true
     };
 
-    console.log('Saving startup:', completeData);
+    // Save complete profile
+    localStorage.setItem('completeProfile', JSON.stringify(completeData));
+    
+    // Simulate API call
     await new Promise(resolve => setTimeout(resolve, 1500));
     
+    // Clear setup data
     localStorage.removeItem('profileData');
+    localStorage.removeItem('selectedRole');
+    localStorage.removeItem('startupPrefs');
+    
+    // Redirect to dashboard
     router.push('/dashboard');
   };
+
+  if (!profileData) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: colorScheme.background }}>
@@ -291,7 +327,6 @@ export default function StartupSetup() {
 
                 {/* Stage & Team Size */}
                 <div className="grid md:grid-cols-2 gap-6">
-                  {/* Stage */}
                   <div className="space-y-3">
                     <label className="flex items-center gap-2 font-semibold text-sm text-gray-700">
                       <Target className="w-4 h-4" />
@@ -333,7 +368,6 @@ export default function StartupSetup() {
                     )}
                   </div>
 
-                  {/* Team Size & Founded Year */}
                   <div className="space-y-3">
                     <div className="grid grid-cols-2 gap-4">
                       <div className="space-y-3">
@@ -370,7 +404,6 @@ export default function StartupSetup() {
                       </div>
                     </div>
 
-                    {/* Funding Stage */}
                     <div className="space-y-3">
                       <label className="flex items-center gap-2 text-sm font-medium text-gray-700">
                         <TrendingUp className="w-4 h-4" />
@@ -421,7 +454,6 @@ export default function StartupSetup() {
 
                 {/* Website & Media Uploads */}
                 <div className="grid md:grid-cols-2 gap-6">
-                  {/* Website */}
                   <div className="space-y-3">
                     <label className="flex items-center gap-2 font-semibold text-sm text-gray-700">
                       <Link className="w-4 h-4" />
@@ -447,14 +479,12 @@ export default function StartupSetup() {
                     )}
                   </div>
 
-                  {/* Media Uploads */}
                   <div className="space-y-3">
                     <label className="flex items-center gap-2 font-semibold text-sm text-gray-700">
                       <ImageIcon className="w-4 h-4" />
                       Media Assets
                     </label>
                     <div className="grid grid-cols-2 gap-3">
-                      {/* Logo Upload */}
                       <label className="block">
                         <div className={`
                           aspect-square border-2 border-dashed rounded-lg cursor-pointer transition-all duration-200
@@ -484,7 +514,6 @@ export default function StartupSetup() {
                         />
                       </label>
 
-                      {/* Banner Upload */}
                       <label className="block">
                         <div className={`
                           aspect-square border-2 border-dashed rounded-lg cursor-pointer transition-all duration-200
@@ -574,17 +603,6 @@ export default function StartupSetup() {
                       type="submit"
                       disabled={loading}
                       className="px-8 py-3 font-semibold rounded-lg transition-all duration-300 shadow-sm hover:shadow-md flex items-center justify-center gap-2 group min-w-[200px] bg-green-600 text-white hover:bg-green-700"
-                      style={{ opacity: loading ? 0.7 : 1 }}
-                      onMouseEnter={(e) => {
-                        if (!loading) {
-                          e.currentTarget.style.transform = 'translateY(-2px)';
-                        }
-                      }}
-                      onMouseLeave={(e) => {
-                        if (!loading) {
-                          e.currentTarget.style.transform = 'translateY(0)';
-                        }
-                      }}
                     >
                       {loading ? (
                         <>
@@ -604,10 +622,9 @@ export default function StartupSetup() {
             </div>
           </div>
 
-          {/* Right Column - Preview & Stats */}
+          {/* Right Column - Preview */}
           <div className="lg:col-span-1">
             <div className="sticky top-8 space-y-6">
-              {/* Startup Preview */}
               <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
                 <div className="mb-6">
                   <h3 className="text-lg font-bold text-gray-900 mb-2">
@@ -617,7 +634,6 @@ export default function StartupSetup() {
                 </div>
 
                 <div className="space-y-4">
-                  {/* Header */}
                   <div className="p-4 bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg border border-green-100">
                     <div className="flex items-center gap-3 mb-3">
                       <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
@@ -638,7 +654,6 @@ export default function StartupSetup() {
                     </div>
                   </div>
 
-                  {/* Stats Grid */}
                   <div className="grid grid-cols-2 gap-3">
                     <div className="p-3 bg-gray-50 rounded-lg border border-gray-100">
                       <p className="text-xs text-gray-400 mb-1">Stage</p>
@@ -666,7 +681,6 @@ export default function StartupSetup() {
                     </div>
                   </div>
 
-                  {/* Goals Preview */}
                   <div className="p-3 bg-gray-50 rounded-lg border border-gray-100">
                     <div className="flex items-center gap-2 mb-2">
                       <Target className="w-4 h-4 text-gray-400" />
@@ -689,7 +703,6 @@ export default function StartupSetup() {
                 </div>
               </div>
 
-              {/* Benefits Card */}
               <div className="p-5 rounded-xl border border-green-100 bg-green-50/50">
                 <div className="flex items-start gap-3">
                   <div className="w-6 h-6 rounded flex items-center justify-center bg-green-600">

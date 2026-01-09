@@ -21,22 +21,36 @@ export default function BasicProfile() {
   const [photoPreview, setPhotoPreview] = useState('');
   const [uploading, setUploading] = useState(false);
 
-  // Color variables following 60-30-10 rule
   const colorScheme = {
-    primary: '#0F0F0F',       // 60% - Dominant (Dark Charcoal)
-    secondary: '#4B5563',     // 30% - Secondary (Cool Gray)
-    accent: '#6366F1',        // 10% - Accent (Indigo)
-    background: '#F9FAFB',    // Background
-    surface: '#FFFFFF',       // Surface
-    border: '#E5E7EB'         // Border
+    primary: '#0F0F0F',
+    secondary: '#4B5563',
+    accent: '#6366F1',
+    background: '#F9FAFB',
+    surface: '#FFFFFF',
+    border: '#E5E7EB'
   };
 
-  // Handle photo upload
+  // Load saved data if exists
+  useEffect(() => {
+    const savedData = localStorage.getItem('profileData');
+    const savedRole = localStorage.getItem('selectedRole');
+    
+    if (savedData) {
+      const data = JSON.parse(savedData);
+      setForm(prev => ({ ...prev, ...data }));
+      if (data.photo) setPhotoPreview(data.photo);
+    }
+    
+    // Ensure role is set
+    if (!role && savedRole) {
+      router.replace(`/profile-setup/basic?role=${savedRole}`);
+    }
+  }, [role, router]);
+
   const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    // Validate file size
     if (file.size > 2 * 1024 * 1024) {
       setErrors(prev => ({ ...prev, photo: 'File size must be less than 2MB' }));
       return;
@@ -54,7 +68,6 @@ export default function BasicProfile() {
     reader.readAsDataURL(file);
   };
 
-  // Validate form
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
 
@@ -85,14 +98,23 @@ export default function BasicProfile() {
       return;
     }
     
-    // Save to localStorage temporarily
-    localStorage.setItem('profileData', JSON.stringify({ ...form, role }));
+    // Save to localStorage
+    const profileData = { ...form, role };
+    localStorage.setItem('profileData', JSON.stringify(profileData));
     
-    // Go to role-specific setup
-    router.push(`/profile-setup/${role}`);
+    // Go to role-specific setup based on role
+    if (role === 'investor') {
+      router.push('/profile-setup/investor');
+    } else if (role === 'professional') {
+      router.push('/profile-setup/professional');
+    } else if (role === 'startup') {
+      router.push('/profile-setup/startup');
+    } else {
+      // Fallback to role selection
+      router.push('/profile-setup');
+    }
   };
 
-  // Update validation on form change
   useEffect(() => {
     if (Object.keys(errors).length > 0) {
       validateForm();
@@ -102,7 +124,7 @@ export default function BasicProfile() {
   return (
     <div className="min-h-screen" style={{ backgroundColor: colorScheme.background }}>
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
-        {/* Header Section - Box Design */}
+        {/* Header Section */}
         <div className="mb-12">
           <div className="bg-white border border-gray-200 rounded-lg p-6 mb-6 shadow-sm">
             <div className="flex flex-col md:flex-row md:items-center justify-between">
@@ -128,12 +150,12 @@ export default function BasicProfile() {
                       <div 
                         className="h-full rounded-full transition-all duration-500"
                         style={{ 
-                          width: '66%',
+                          width: '33%',
                           backgroundColor: colorScheme.accent 
                         }}
                       ></div>
                     </div>
-                    <span className="text-sm font-bold" style={{ color: colorScheme.primary }}>66%</span>
+                    <span className="text-sm font-bold" style={{ color: colorScheme.primary }}>33%</span>
                   </div>
                 </div>
               </div>
@@ -145,7 +167,6 @@ export default function BasicProfile() {
           {/* Left - Form Panel */}
           <div className="lg:col-span-8">
             <div className="bg-white rounded-lg border border-gray-200 p-6 shadow-sm">
-              {/* Form Header Box */}
               <div className="mb-8 pb-6 border-b border-gray-100">
                 <div className="flex items-center gap-3">
                   <div className="w-12 h-12 rounded-lg flex items-center justify-center" 
@@ -162,7 +183,7 @@ export default function BasicProfile() {
               </div>
 
               <form onSubmit={handleSubmit} className="space-y-8">
-                {/* Profile Photo Section - Box Design */}
+                {/* Profile Photo Section */}
                 <div className="bg-gray-50 rounded-lg p-6 border border-gray-200">
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
                     <div>
@@ -205,6 +226,7 @@ export default function BasicProfile() {
                             className="hidden"
                             accept="image/*"
                             onChange={handlePhotoUpload}
+                            disabled={uploading}
                           />
                         </label>
                       </div>
@@ -213,13 +235,14 @@ export default function BasicProfile() {
                         <label className="inline-flex items-center gap-2 px-4 py-3 bg-white border-2 border-gray-300 rounded-lg cursor-pointer hover:border-gray-400 transition-colors">
                           <Upload className="w-4 h-4" style={{ color: colorScheme.secondary }} />
                           <span className="font-medium" style={{ color: colorScheme.primary }}>
-                            Upload
+                            {uploading ? 'Uploading...' : 'Upload'}
                           </span>
                           <input
                             type="file"
                             className="hidden"
                             accept="image/*"
                             onChange={handlePhotoUpload}
+                            disabled={uploading}
                           />
                         </label>
                         <p className="text-xs text-gray-400 mt-2">JPG, PNG • 2MB max</p>
@@ -337,7 +360,7 @@ export default function BasicProfile() {
                   </div>
                 </div>
 
-                {/* Bio Section - Full Width Box */}
+                {/* Bio Section */}
                 <div className="space-y-3">
                   <label className="flex items-center gap-2 font-semibold text-sm" 
                          style={{ color: colorScheme.secondary }}>
@@ -379,12 +402,6 @@ export default function BasicProfile() {
                         backgroundColor: colorScheme.accent,
                         color: 'white'
                       }}
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.transform = 'translateY(-2px)';
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.transform = 'translateY(0)';
-                      }}
                     >
                       <span>Continue to {role ? role.charAt(0).toUpperCase() + role.slice(1) : 'Next'} Setup</span>
                       <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
@@ -398,7 +415,6 @@ export default function BasicProfile() {
           {/* Right - Preview Panel */}
           <div className="lg:col-span-4">
             <div className="sticky top-8">
-              {/* Preview Box */}
               <div className="bg-white rounded-lg border border-gray-200 p-6 shadow-sm mb-6">
                 <div className="mb-6">
                   <h3 className="text-lg font-bold mb-2" style={{ color: colorScheme.primary }}>
@@ -407,7 +423,6 @@ export default function BasicProfile() {
                   <p className="text-sm text-gray-500">Live preview of your profile</p>
                 </div>
 
-                {/* Preview Header */}
                 <div className="flex flex-col items-center text-center p-6 mb-6 rounded-lg"
                      style={{ backgroundColor: `${colorScheme.accent}05` }}>
                   <div className="w-20 h-20 bg-gray-100 border-4 border-white rounded-lg overflow-hidden mb-4 shadow-sm">
@@ -436,9 +451,7 @@ export default function BasicProfile() {
                   </div>
                 </div>
 
-                {/* Preview Details */}
                 <div className="space-y-4">
-                  {/* Location */}
                   <div className="p-4 bg-gray-50 rounded-lg border border-gray-100">
                     <div className="flex items-center gap-3 mb-2">
                       <div className="w-8 h-8 rounded flex items-center justify-center" 
@@ -454,7 +467,6 @@ export default function BasicProfile() {
                     </div>
                   </div>
 
-                  {/* Bio */}
                   <div className="p-4 bg-gray-50 rounded-lg border border-gray-100">
                     <div className="flex items-start gap-3">
                       <div className="w-8 h-8 rounded flex items-center justify-center" 
@@ -470,7 +482,6 @@ export default function BasicProfile() {
                     </div>
                   </div>
 
-                  {/* Completion Status */}
                   <div className="p-4 bg-gray-50 rounded-lg border border-gray-100">
                     <div className="mb-3">
                       <div className="flex justify-between text-sm mb-1">
@@ -478,13 +489,13 @@ export default function BasicProfile() {
                           Profile Completion
                         </span>
                         <span className="font-bold" style={{ color: colorScheme.accent }}>
-                          40%
+                          {form.name && form.username && form.location ? '33%' : '0%'}
                         </span>
                       </div>
                       <div className="w-full bg-gray-200 rounded-full h-2">
                         <div className="h-2 rounded-full" 
                              style={{ 
-                               width: '40%',
+                               width: form.name && form.username && form.location ? '33%' : '0%',
                                backgroundColor: colorScheme.accent 
                              }}></div>
                       </div>
@@ -492,7 +503,7 @@ export default function BasicProfile() {
                     
                     <div className="space-y-2">
                       <div className="flex items-center gap-2">
-                        <div className={`w-3 h-3 rounded-full ${form.name ? 'bg-green-500' : 'bg-gray-300'}`}></div>
+                        <div className={`w-3 h-3 rounded-full ${form.name && form.username && form.location ? 'bg-green-500' : 'bg-gray-300'}`}></div>
                         <span className="text-sm" style={{ color: colorScheme.secondary }}>
                           Basic Info
                         </span>
@@ -514,7 +525,6 @@ export default function BasicProfile() {
                 </div>
               </div>
 
-              {/* Tips Box */}
               <div className="p-5 rounded-lg border border-blue-100"
                    style={{ backgroundColor: `${colorScheme.accent}05` }}>
                 <div className="flex items-start gap-3">
