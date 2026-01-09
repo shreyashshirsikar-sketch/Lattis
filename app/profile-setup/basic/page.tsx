@@ -22,12 +22,12 @@ export default function BasicProfile() {
   const [uploading, setUploading] = useState(false);
 
   const colorScheme = {
-    primary: '#0F0F0F',
-    secondary: '#4B5563',
-    accent: '#6366F1',
-    background: '#F9FAFB',
-    surface: '#FFFFFF',
-    border: '#E5E7EB'
+    primary: '#0F0F0F',       // 60% - Main text
+    secondary: '#4B5563',     // 30% - Secondary text
+    accent: '#6366F1',        // 10% - Accent color (Indigo)
+    background: '#F9FAFB',    // Background
+    surface: '#FFFFFF',       // Surface/Cards
+    border: '#E5E7EB'         // Borders
   };
 
   // Load saved data if exists
@@ -130,7 +130,8 @@ export default function BasicProfile() {
             <div className="flex flex-col md:flex-row md:items-center justify-between">
               <div>
                 <div className="flex items-center gap-3 mb-2">
-                  <div className="w-10 h-10 bg-gray-900 rounded-lg flex items-center justify-center">
+                  <div className="w-10 h-10 rounded-lg flex items-center justify-center" 
+                       style={{ backgroundColor: colorScheme.accent }}>
                     <User className="w-5 h-5 text-white" />
                   </div>
                   <div>
@@ -170,7 +171,7 @@ export default function BasicProfile() {
               <div className="mb-8 pb-6 border-b border-gray-100">
                 <div className="flex items-center gap-3">
                   <div className="w-12 h-12 rounded-lg flex items-center justify-center" 
-                       style={{ backgroundColor: `${colorScheme.accent}10` }}>
+                       style={{ backgroundColor: `${colorScheme.accent}20` }}>
                     <User className="w-6 h-6" style={{ color: colorScheme.accent }} />
                   </div>
                   <div>
@@ -424,7 +425,7 @@ export default function BasicProfile() {
                 </div>
 
                 <div className="flex flex-col items-center text-center p-6 mb-6 rounded-lg"
-                     style={{ backgroundColor: `${colorScheme.accent}05` }}>
+                     style={{ backgroundColor: `${colorScheme.accent}10` }}>
                   <div className="w-20 h-20 bg-gray-100 border-4 border-white rounded-lg overflow-hidden mb-4 shadow-sm">
                     {photoPreview ? (
                       <img 
@@ -455,7 +456,7 @@ export default function BasicProfile() {
                   <div className="p-4 bg-gray-50 rounded-lg border border-gray-100">
                     <div className="flex items-center gap-3 mb-2">
                       <div className="w-8 h-8 rounded flex items-center justify-center" 
-                           style={{ backgroundColor: `${colorScheme.accent}10` }}>
+                           style={{ backgroundColor: `${colorScheme.accent}20` }}>
                         <MapPin className="w-4 h-4" style={{ color: colorScheme.accent }} />
                       </div>
                       <div>
@@ -470,7 +471,7 @@ export default function BasicProfile() {
                   <div className="p-4 bg-gray-50 rounded-lg border border-gray-100">
                     <div className="flex items-start gap-3">
                       <div className="w-8 h-8 rounded flex items-center justify-center" 
-                           style={{ backgroundColor: `${colorScheme.accent}10` }}>
+                           style={{ backgroundColor: `${colorScheme.accent}20` }}>
                         <FileText className="w-4 h-4" style={{ color: colorScheme.accent }} />
                       </div>
                       <div className="flex-1">
@@ -525,8 +526,11 @@ export default function BasicProfile() {
                 </div>
               </div>
 
-              <div className="p-5 rounded-lg border border-blue-100"
-                   style={{ backgroundColor: `${colorScheme.accent}05` }}>
+              <div className="p-5 rounded-lg border"
+                   style={{ 
+                     backgroundColor: `${colorScheme.accent}10`,
+                     borderColor: `${colorScheme.accent}20`
+                   }}>
                 <div className="flex items-start gap-3">
                   <div className="w-6 h-6 rounded flex items-center justify-center" 
                        style={{ backgroundColor: colorScheme.accent }}>

@@ -7,7 +7,7 @@ import {
   CheckCircle, Calendar, Bell, 
   Search, MessageSquare, Settings,
   Briefcase, Building2, Target,
-  ArrowRight, LogOut
+  ArrowRight, LogOut, Loader2
 } from 'lucide-react';
 
 export default function Dashboard() {
@@ -16,12 +16,12 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true);
 
   const colorScheme = {
-    primary: '#0F0F0F',
-    secondary: '#4B5563',
-    accent: '#6366F1',
-    background: '#F9FAFB',
-    surface: '#FFFFFF',
-    border: '#E5E7EB'
+    primary: '#0F0F0F',       // 60% - Main text
+    secondary: '#4B5563',     // 30% - Secondary text
+    accent: '#6366F1',        // 10% - Accent color (Indigo)
+    background: '#F9FAFB',    // Background
+    surface: '#FFFFFF',       // Surface/Cards
+    border: '#E5E7EB'         // Borders
   };
 
   useEffect(() => {
@@ -30,8 +30,17 @@ export default function Dashboard() {
     if (savedProfile) {
       setProfile(JSON.parse(savedProfile));
     } else {
-      // Redirect to setup if no profile
-      router.push('/profile-setup');
+      // Check if there's any incomplete setup
+      const profileData = localStorage.getItem('profileData');
+      const selectedRole = localStorage.getItem('selectedRole');
+      
+      if (profileData || selectedRole) {
+        // Redirect to continue setup
+        router.push('/profile-setup');
+      } else {
+        // No profile at all, redirect to role selection
+        router.push('/profile-setup');
+      }
     }
     setLoading(false);
   }, [router]);
@@ -45,29 +54,29 @@ export default function Dashboard() {
   const getRoleIcon = (role: string) => {
     switch (role) {
       case 'professional':
-        return <Briefcase className="w-5 h-5 text-blue-600" />;
+        return <Briefcase className="w-5 h-5" style={{ color: colorScheme.accent }} />;
       case 'startup':
-        return <Rocket className="w-5 h-5 text-green-600" />;
+        return <Rocket className="w-5 h-5" style={{ color: colorScheme.accent }} />;
       case 'investor':
-        return <TrendingUp className="w-5 h-5 text-purple-600" />;
+        return <TrendingUp className="w-5 h-5" style={{ color: colorScheme.accent }} />;
       default:
-        return <User className="w-5 h-5 text-gray-600" />;
+        return <User className="w-5 h-5" style={{ color: colorScheme.accent }} />;
     }
   };
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: colorScheme.background }}>
         <div className="text-center">
-          <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading your dashboard...</p>
+          <Loader2 className="w-12 h-12 animate-spin mx-auto mb-4" style={{ color: colorScheme.accent }} />
+          <p style={{ color: colorScheme.secondary }}>Loading your dashboard...</p>
         </div>
       </div>
     );
   }
 
   if (!profile) {
-    return null;
+    return null; // Will redirect in useEffect
   }
 
   return (
@@ -82,8 +91,8 @@ export default function Dashboard() {
                   {profile.photo ? (
                     <img src={profile.photo} alt="Profile" className="w-full h-full object-cover" />
                   ) : (
-                    <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-100 to-indigo-100">
-                      <User className="w-8 h-8 text-blue-600" />
+                    <div className="w-full h-full flex items-center justify-center" style={{ backgroundColor: `${colorScheme.accent}20` }}>
+                      <User className="w-8 h-8" style={{ color: colorScheme.accent }} />
                     </div>
                   )}
                 </div>
@@ -97,23 +106,23 @@ export default function Dashboard() {
                   <h1 className="text-2xl font-bold" style={{ color: colorScheme.primary }}>
                     Welcome back, {profile.name?.split(' ')[0]}!
                   </h1>
-                  <div className="flex items-center gap-2 px-3 py-1 bg-gray-100 rounded-full">
+                  <div className="flex items-center gap-2 px-3 py-1 rounded-full" style={{ backgroundColor: `${colorScheme.accent}10` }}>
                     {getRoleIcon(profile.type)}
-                    <span className="text-sm font-medium capitalize">
+                    <span className="text-sm font-medium capitalize" style={{ color: colorScheme.accent }}>
                       {profile.type}
                     </span>
                   </div>
                 </div>
-                <p className="text-gray-500">@{profile.username} • {profile.location}</p>
+                <p style={{ color: colorScheme.secondary }}>@{profile.username} • {profile.location}</p>
               </div>
             </div>
 
             <div className="flex items-center gap-3">
               <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
-                <Bell className="w-5 h-5 text-gray-600" />
+                <Bell className="w-5 h-5" style={{ color: colorScheme.secondary }} />
               </button>
               <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
-                <Settings className="w-5 h-5 text-gray-600" />
+                <Settings className="w-5 h-5" style={{ color: colorScheme.secondary }} />
               </button>
               <button
                 onClick={handleLogout}
@@ -136,17 +145,17 @@ export default function Dashboard() {
                 <h2 className="text-lg font-bold mb-2" style={{ color: colorScheme.primary }}>
                   Profile Overview
                 </h2>
-                <p className="text-sm text-gray-500">Your profile is 100% complete</p>
+                <p style={{ color: colorScheme.secondary }}>Your profile is 100% complete</p>
               </div>
 
               <div className="space-y-4">
                 <div className="p-4 bg-gray-50 rounded-lg border border-gray-100">
                   <div className="flex items-center gap-3 mb-2">
-                    <div className="w-10 h-10 rounded-lg flex items-center justify-center bg-blue-50">
-                      <User className="w-5 h-5 text-blue-600" />
+                    <div className="w-10 h-10 rounded-lg flex items-center justify-center" style={{ backgroundColor: `${colorScheme.accent}20` }}>
+                      <User className="w-5 h-5" style={{ color: colorScheme.accent }} />
                     </div>
                     <div>
-                      <p className="text-xs text-gray-400 uppercase">Role</p>
+                      <p className="text-xs uppercase" style={{ color: colorScheme.secondary }}>Role</p>
                       <p className="font-medium capitalize">{profile.type}</p>
                     </div>
                   </div>
@@ -154,11 +163,11 @@ export default function Dashboard() {
 
                 <div className="p-4 bg-gray-50 rounded-lg border border-gray-100">
                   <div className="flex items-center gap-3 mb-2">
-                    <div className="w-10 h-10 rounded-lg flex items-center justify-center bg-green-50">
-                      <Target className="w-5 h-5 text-green-600" />
+                    <div className="w-10 h-10 rounded-lg flex items-center justify-center" style={{ backgroundColor: `${colorScheme.accent}20` }}>
+                      <Target className="w-5 h-5" style={{ color: colorScheme.accent }} />
                     </div>
                     <div>
-                      <p className="text-xs text-gray-400 uppercase">Status</p>
+                      <p className="text-xs uppercase" style={{ color: colorScheme.secondary }}>Status</p>
                       <p className="font-medium">Active • Verified</p>
                     </div>
                   </div>
@@ -166,11 +175,11 @@ export default function Dashboard() {
 
                 <div className="p-4 bg-gray-50 rounded-lg border border-gray-100">
                   <div className="flex items-center gap-3 mb-2">
-                    <div className="w-10 h-10 rounded-lg flex items-center justify-center bg-purple-50">
-                      <Calendar className="w-5 h-5 text-purple-600" />
+                    <div className="w-10 h-10 rounded-lg flex items-center justify-center" style={{ backgroundColor: `${colorScheme.accent}20` }}>
+                      <Calendar className="w-5 h-5" style={{ color: colorScheme.accent }} />
                     </div>
                     <div>
-                      <p className="text-xs text-gray-400 uppercase">Member Since</p>
+                      <p className="text-xs uppercase" style={{ color: colorScheme.secondary }}>Member Since</p>
                       <p className="font-medium">
                         {new Date(profile.completedAt || Date.now()).toLocaleDateString('en-US', {
                           month: 'long',
@@ -191,32 +200,32 @@ export default function Dashboard() {
               <div className="space-y-3">
                 <button className="w-full flex items-center justify-between p-3 bg-gray-50 hover:bg-gray-100 border border-gray-200 rounded-lg transition-colors">
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center">
-                      <Search className="w-4 h-4 text-blue-600" />
+                    <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: `${colorScheme.accent}20` }}>
+                      <Search className="w-4 h-4" style={{ color: colorScheme.accent }} />
                     </div>
-                    <span className="font-medium">Find Opportunities</span>
+                    <span className="font-medium" style={{ color: colorScheme.primary }}>Find Opportunities</span>
                   </div>
-                  <ArrowRight className="w-4 h-4 text-gray-400" />
+                  <ArrowRight className="w-4 h-4" style={{ color: colorScheme.secondary }} />
                 </button>
 
                 <button className="w-full flex items-center justify-between p-3 bg-gray-50 hover:bg-gray-100 border border-gray-200 rounded-lg transition-colors">
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-lg bg-green-50 flex items-center justify-center">
-                      <MessageSquare className="w-4 h-4 text-green-600" />
+                    <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: `${colorScheme.accent}20` }}>
+                      <MessageSquare className="w-4 h-4" style={{ color: colorScheme.accent }} />
                     </div>
-                    <span className="font-medium">View Messages</span>
+                    <span className="font-medium" style={{ color: colorScheme.primary }}>View Messages</span>
                   </div>
-                  <ArrowRight className="w-4 h-4 text-gray-400" />
+                  <ArrowRight className="w-4 h-4" style={{ color: colorScheme.secondary }} />
                 </button>
 
                 <button className="w-full flex items-center justify-between p-3 bg-gray-50 hover:bg-gray-100 border border-gray-200 rounded-lg transition-colors">
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-lg bg-purple-50 flex items-center justify-center">
-                      <Building2 className="w-4 h-4 text-purple-600" />
+                    <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: `${colorScheme.accent}20` }}>
+                      <Building2 className="w-4 h-4" style={{ color: colorScheme.accent }} />
                     </div>
-                    <span className="font-medium">Edit Profile</span>
+                    <span className="font-medium" style={{ color: colorScheme.primary }}>Edit Profile</span>
                   </div>
-                  <ArrowRight className="w-4 h-4 text-gray-400" />
+                  <ArrowRight className="w-4 h-4" style={{ color: colorScheme.secondary }} />
                 </button>
               </div>
             </div>
@@ -225,14 +234,14 @@ export default function Dashboard() {
           {/* Center Column - Main Content */}
           <div className="lg:col-span-2 space-y-6">
             {/* Welcome Banner */}
-            <div className="bg-gradient-to-r from-blue-500 to-indigo-600 rounded-xl p-6 text-white">
+            <div className="rounded-xl p-6 text-white" style={{ background: `linear-gradient(135deg, ${colorScheme.accent}, #818cf8)` }}>
               <div className="flex items-start justify-between">
                 <div>
                   <h2 className="text-2xl font-bold mb-2">Welcome to Lattis!</h2>
                   <p className="opacity-90 mb-4">
                     Your profile is complete. Start exploring opportunities and connecting with the community.
                   </p>
-                  <button className="px-6 py-2 bg-white text-blue-600 font-semibold rounded-lg hover:bg-gray-100 transition-colors">
+                  <button className="px-6 py-2 bg-white font-semibold rounded-lg hover:bg-gray-100 transition-colors" style={{ color: colorScheme.accent }}>
                     Get Started
                   </button>
                 </div>
@@ -250,28 +259,28 @@ export default function Dashboard() {
                 <div className="text-2xl font-bold mb-1" style={{ color: colorScheme.primary }}>
                   0
                 </div>
-                <p className="text-sm text-gray-500">Connections</p>
+                <p style={{ color: colorScheme.secondary }}>Connections</p>
               </div>
               
               <div className="bg-white border border-gray-200 rounded-xl p-4 shadow-sm">
                 <div className="text-2xl font-bold mb-1" style={{ color: colorScheme.primary }}>
                   0
                 </div>
-                <p className="text-sm text-gray-500">Messages</p>
+                <p style={{ color: colorScheme.secondary }}>Messages</p>
               </div>
               
               <div className="bg-white border border-gray-200 rounded-xl p-4 shadow-sm">
                 <div className="text-2xl font-bold mb-1" style={{ color: colorScheme.primary }}>
                   0
                 </div>
-                <p className="text-sm text-gray-500">Opportunities</p>
+                <p style={{ color: colorScheme.secondary }}>Opportunities</p>
               </div>
               
               <div className="bg-white border border-gray-200 rounded-xl p-4 shadow-sm">
                 <div className="text-2xl font-bold mb-1" style={{ color: colorScheme.primary }}>
                   100%
                 </div>
-                <p className="text-sm text-gray-500">Profile Complete</p>
+                <p style={{ color: colorScheme.secondary }}>Profile Complete</p>
               </div>
             </div>
 
@@ -281,18 +290,18 @@ export default function Dashboard() {
                 <h2 className="text-lg font-bold" style={{ color: colorScheme.primary }}>
                   Recent Activity
                 </h2>
-                <button className="text-sm text-blue-600 font-medium">View All</button>
+                <button className="text-sm font-medium" style={{ color: colorScheme.accent }}>View All</button>
               </div>
               
               <div className="space-y-4">
-                <div className="p-4 bg-blue-50 border border-blue-100 rounded-lg">
+                <div className="p-4 rounded-lg" style={{ backgroundColor: `${colorScheme.accent}10`, borderColor: `${colorScheme.accent}20` }}>
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-lg bg-white border border-blue-200 flex items-center justify-center">
-                      <CheckCircle className="w-5 h-5 text-blue-600" />
+                    <div className="w-10 h-10 rounded-lg bg-white flex items-center justify-center" style={{ borderColor: `${colorScheme.accent}30` }}>
+                      <CheckCircle className="w-5 h-5" style={{ color: colorScheme.accent }} />
                     </div>
                     <div>
-                      <p className="font-medium">Profile Completed</p>
-                      <p className="text-sm text-gray-600">Your profile setup is complete</p>
+                      <p className="font-medium" style={{ color: colorScheme.primary }}>Profile Completed</p>
+                      <p style={{ color: colorScheme.secondary }}>Your profile setup is complete</p>
                     </div>
                   </div>
                 </div>
@@ -300,11 +309,11 @@ export default function Dashboard() {
                 <div className="p-4 bg-gray-50 border border-gray-100 rounded-lg">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-lg bg-white border border-gray-200 flex items-center justify-center">
-                      <Bell className="w-5 h-5 text-gray-600" />
+                      <Bell className="w-5 h-5" style={{ color: colorScheme.secondary }} />
                     </div>
                     <div>
-                      <p className="font-medium">Welcome to Lattis</p>
-                      <p className="text-sm text-gray-600">Explore features and get started</p>
+                      <p className="font-medium" style={{ color: colorScheme.primary }}>Welcome to Lattis</p>
+                      <p style={{ color: colorScheme.secondary }}>Explore features and get started</p>
                     </div>
                   </div>
                 </div>
