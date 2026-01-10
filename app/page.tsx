@@ -71,28 +71,28 @@ export default function Home() {
     { 
       number: 1, 
       title: "Build Your Profile", 
-      description: "Tell us about your background, skills, and what you're looking for. Be specific about your goals.", 
+      description: "Tell us about your background, skills, and what you’re looking for—whether to join, build, or invest.", 
       icon: UserPlus 
     },
     { 
       number: 2, 
-      title: "Discover Opportunities", 
-      description: "Use smart filters to find exactly what matches your criteria—whether it's talent, funding, or partnerships.", 
+      title: "Discover & Match", 
+      description: "Use smart filters to find people and opportunities that align with your goals.", 
       icon: Search 
     },
     { 
       number: 3, 
       title: "Start Collaborating", 
-      description: "Connect directly and begin working together. We provide tools to manage projects and track progress.", 
+      description: "Connect directly and begin working together with tools to track progress and projects.", 
       icon: Handshake 
     }
   ];
 
   const roles = [
     {
-      title: "Students & Aspiring Builders",
+      title: "Professionals & Aspiring Builders",
       icon: GraduationCap,
-      description: "Learn by doing in real startup environments. Build your portfolio, find internships, and grow with early-stage teams.",
+      description: "Learn by doing in real startup environments. Build your portfolio through projects, internships, and direct founder connections.",
       points: ["Build real-world projects", "Find startup internships", "Connect directly with founders"]
     },
     {
@@ -104,8 +104,14 @@ export default function Home() {
     {
       title: "Investors & Angels",
       icon: Lightbulb,
-      description: "Discover promising startups in their earliest phases. Evaluate founders, products, and make informed investment decisions.",
+      description: "Discover promising startups from the beginning. Evaluate founders, products, and make informed investment decisions.",
       points: ["Early-stage access", "Direct founder access", "Informed decisions"]
+    },
+    {
+      title: "Incubators & Accelerators",
+      icon: Lightbulb,
+      description: "Discover promising startups early, support portfolio companies with talent, and connect founders with investors.",
+      points: ["Discover startups early", "Support portfolio talent needs", "Network with investors"]
     }
   ];
 
@@ -136,7 +142,7 @@ export default function Home() {
                 onClick={() => scrollToSection('for-students')}
                 className="text-sm text-gray-600 hover:text-[#7373D7] transition-colors cursor-pointer"
               >
-                For Students
+                For Professionals
               </button>
               
               {/* For Investors link */}
@@ -153,6 +159,13 @@ export default function Home() {
                 className="text-sm text-gray-600 hover:text-[#7373D7] transition-colors cursor-pointer"
               >
                 For Startups
+              </button>
+              {/* For Incubators link */}
+              <button
+                onClick={() => scrollToSection('for-incubators')}
+                className="text-sm text-gray-600 hover:text-[#7373D7] transition-colors cursor-pointer"
+              >
+                For Incubators
               </button>
             </nav>
 
@@ -242,7 +255,7 @@ export default function Home() {
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <div className="inline-flex items-center gap-2 bg-[#7373D7]/10 text-[#7373D7] px-3 py-1 rounded-full text-sm font-medium mb-6">
               <Target className="w-4 h-4" />
-              Your Gateway to the Startup World
+              Welcome to Lattis
             </div>
             
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6 leading-tight">
@@ -251,7 +264,7 @@ export default function Home() {
             </h1>
             
             <p className="text-lg text-gray-600 mb-10 max-w-2xl mx-auto leading-relaxed">
-              Whether you're learning, building, or investing—Lattis connects you to the right people, opportunities, and tools from day one.
+              Whether you're looking for hands-on startup experience, building your founding team, or discovering early-stage opportunities—Lattis is building a place where real connections happen.
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
@@ -259,25 +272,27 @@ export default function Home() {
                 href="/signup"
                 className="px-8 py-3.5 bg-gradient-to-r from-[#7373D7] to-[#6363C7] text-white rounded-lg hover:opacity-95 font-medium text-base transition-opacity"
               >
-                Start exploring →
+                Join the waitlist →
               </Link>
               <button 
                 onClick={() => scrollToSection('how-it-works')}
                 className="px-8 py-3.5 border border-gray-300 text-gray-700 rounded-lg hover:border-gray-400 font-medium text-base flex items-center justify-center gap-3 transition-colors"
               >
                 <Play className="w-4 h-4" />
-                See how it works
+               Follow our journey
               </button>
             </div>
             
             <div className="inline-flex items-center gap-6 text-sm text-gray-500">
               <span>Join our early community</span>
               <div className="flex items-center gap-4">
-                <span className="font-medium text-gray-700">Students</span>
+                <span className="font-medium text-gray-700">Professionals</span>
                 <span className="text-gray-400">•</span>
                 <span className="font-medium text-gray-700">Founders</span>
                 <span className="text-gray-400">•</span>
                 <span className="font-medium text-gray-700">Investors</span>
+                <span className="text-gray-400">•</span>
+                <span className="font-medium text-gray-700">Incubators</span>
               </div>
             </div>
           </div>
@@ -293,7 +308,7 @@ export default function Home() {
                 </div>
                 <h3 className="text-lg font-semibold text-gray-900 mb-3">Real Startup Experience</h3>
                 <p className="text-gray-600 text-sm">
-                  Learn by doing in live startup environments. Get hands-on experience with early-stage products and teams.
+                  Learn by doing in real startup environments. Gain practical skills and build a portfolio through hands-on projects.
                 </p>
               </div>
               
@@ -303,7 +318,7 @@ export default function Home() {
                 </div>
                 <h3 className="text-lg font-semibold text-gray-900 mb-3">Validate Before You Launch</h3>
                 <p className="text-gray-600 text-sm">
-                  Test your ideas with real feedback from the community. Make informed decisions before going to market.
+                  Test your ideas with feedback from an early adopter community. Make informed decisions before scaling.
                 </p>
               </div>
               
@@ -313,7 +328,7 @@ export default function Home() {
                 </div>
                 <h3 className="text-lg font-semibold text-gray-900 mb-3">Direct Connections</h3>
                 <p className="text-gray-600 text-sm">
-                  Connect directly with founders, team members, and investors. No middlemen, just meaningful conversations.
+                  Connect directly with founders and investors. No premium paywalls, no intermediaries—just meaningful conversations.
                 </p>
               </div>
             </div>
@@ -328,7 +343,7 @@ export default function Home() {
                 Built for every stage of innovation
               </h2>
               <p className="text-gray-600 max-w-2xl mx-auto">
-                Different roles, shared mission. We've created specific tools for each part of the early-stage ecosystem.
+               Different roles, shared mission. We’re building specific tools for each part of the early-stage ecosystem.
               </p>
             </div>
             
@@ -368,7 +383,7 @@ export default function Home() {
         How Lattis Works
       </h2>
       <p className="text-gray-600 max-w-2xl mx-auto">
-        Simple process designed for action and meaningful connections.
+        A simple process designed for action and meaningful connections.
       </p>
     </div>
 
@@ -405,10 +420,10 @@ export default function Home() {
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16">
               <h2 className="text-3xl font-bold text-gray-900 mb-4">
-                Students: Launch Your Career in Startups
+                Professionals: Launch Your Career in Startups
               </h2>
               <p className="text-gray-600 max-w-2xl mx-auto">
-                Gain real-world experience, build your portfolio, and connect with early-stage startups.
+                Gain hands-on startup experience, build your portfolio, and connect directly with early-stage teams.
               </p>
             </div>
             
@@ -417,7 +432,7 @@ export default function Home() {
                 <div>
                   <div className="inline-flex items-center gap-2 bg-[#7373D7]/10 text-[#7373D7] px-3 py-1 rounded-full text-sm font-medium mb-6">
                     <GraduationCap className="w-4 h-4" />
-                    For Students
+                    For Professionals
                   </div>
                   <h3 className="text-2xl font-bold text-gray-900 mb-4">
                     Start building your portfolio with real projects
@@ -429,7 +444,7 @@ export default function Home() {
                     </li>
                     <li className="flex items-start gap-3">
                       <Check className="w-5 h-5 text-[#7373D7] mt-1 flex-shrink-0" />
-                      <span className="text-gray-600">Find internships and part-time roles in early-stage companies</span>
+                      <span className="text-gray-600">Find internships and project roles in early-stage companies</span>
                     </li>
                     <li className="flex items-start gap-3">
                       <Check className="w-5 h-5 text-[#7373D7] mt-1 flex-shrink-0" />
@@ -444,7 +459,7 @@ export default function Home() {
                     href="/signup"
                     className="inline-flex items-center gap-2 bg-gradient-to-r from-[#7373D7] to-[#6363C7] text-white px-6 py-3 rounded-lg hover:opacity-95 transition-opacity font-medium"
                   >
-                    Explore Student Opportunities
+                    Explore Opportunities
                     <ArrowRight className="w-4 h-4" />
                   </Link>
                 </div>
@@ -492,7 +507,7 @@ export default function Home() {
                 Investors: Discover Early-Stage Opportunities
               </h2>
               <p className="text-gray-600 max-w-2xl mx-auto">
-                Get access to vetted startups, evaluate teams, and make informed investment decisions.
+                Get access to a growing pipeline of startups, evaluate teams, and make informed investment decisions.
               </p>
             </div>
             
@@ -504,31 +519,27 @@ export default function Home() {
                     For Investors
                   </div>
                   <h3 className="text-2xl font-bold text-gray-900 mb-4">
-                    Access curated startup pipeline
+                    Access a curated startup pipeline
                   </h3>
                   <ul className="space-y-4 mb-8">
-                    <li className="flex items-start gap-3">
-                      <Check className="w-5 h-5 text-[#7373D7] mt-1 flex-shrink-0" />
-                      <span className="text-gray-600">Access pre-vetted startups in their earliest phases</span>
-                    </li>
                     <li className="flex items-start gap-3">
                       <Check className="w-5 h-5 text-[#7373D7] mt-1 flex-shrink-0" />
                       <span className="text-gray-600">Evaluate founders and teams directly</span>
                     </li>
                     <li className="flex items-start gap-3">
                       <Check className="w-5 h-5 text-[#7373D7] mt-1 flex-shrink-0" />
-                      <span className="text-gray-600">Track progress and traction in real-time</span>
+                      <span className="text-gray-600">Track progress and milestones in real-time</span>
                     </li>
                     <li className="flex items-start gap-3">
                       <Check className="w-5 h-5 text-[#7373D7] mt-1 flex-shrink-0" />
-                      <span className="text-gray-600">Connect with other investors in your network</span>
+                      <span className="text-gray-600">Connect with other early-stage investors</span>
                     </li>
                   </ul>
                   <Link
                     href="/signup"
                     className="inline-flex items-center gap-2 bg-gradient-to-r from-[#7373D7] to-[#6363C7] text-white px-6 py-3 rounded-lg hover:opacity-95 transition-opacity font-medium"
                   >
-                    Explore Investment Opportunities
+                    Explore Early-Stage Opportunities
                     <ArrowRight className="w-4 h-4" />
                   </Link>
                 </div>
@@ -538,7 +549,7 @@ export default function Home() {
                       <h4 className="font-semibold text-gray-900 mb-2">Startup Pipeline</h4>
                       <div className="flex items-center justify-between mb-1">
                         <span className="text-sm text-gray-600">Pre-seed stage</span>
-                        <span className="text-sm font-semibold">45+ startups</span>
+                        <span className="text-sm font-semibold">Startups validating ideas and building prototypes</span>
                       </div>
                       <div className="w-full bg-gray-200 rounded-full h-2">
                         <div className="bg-blue-600 h-2 rounded-full" style={{ width: '40%' }}></div>
@@ -548,17 +559,17 @@ export default function Home() {
                       <h4 className="font-semibold text-gray-900 mb-2">Seed stage</h4>
                       <div className="flex items-center justify-between mb-1">
                         <span className="text-sm text-gray-600">Traction proven</span>
-                        <span className="text-sm font-semibold">28+ startups</span>
+                        <span className="text-sm font-semibold">Startups with launched products and early traction</span>
                       </div>
                       <div className="w-full bg-gray-200 rounded-full h-2">
                         <div className="bg-green-600 h-2 rounded-full" style={{ width: '25%' }}></div>
                       </div>
                     </div>
                     <div>
-                      <h4 className="font-semibold text-gray-900 mb-2">Series A ready</h4>
+                      <h4 className="font-semibold text-gray-900 mb-2">Series A Preparation</h4>
                       <div className="flex items-center justify-between mb-1">
                         <span className="text-sm text-gray-600">Scaling phase</span>
-                        <span className="text-sm font-semibold">12+ startups</span>
+                        <span className="text-sm font-semibold">Startups scaling toward institutional funding</span>
                       </div>
                       <div className="w-full bg-gray-200 rounded-full h-2">
                         <div className="bg-purple-600 h-2 rounded-full" style={{ width: '15%' }}></div>
@@ -566,8 +577,8 @@ export default function Home() {
                     </div>
                     <div className="pt-4 border-t border-gray-200">
                       <div className="flex items-center justify-between text-sm">
-                        <span className="text-gray-600">Average funding raised</span>
-                        <span className="font-semibold text-gray-900">$1.2M</span>
+                        <span className="text-gray-600">Interested in early access to our pipeline?</span>
+                        <span className="font-semibold text-gray-900">Get in Touch →</span>
                       </div>
                     </div>
                   </div>
@@ -641,7 +652,7 @@ export default function Home() {
                     </li>
                     <li className="flex items-start gap-3">
                       <Check className="w-5 h-5 text-[#7373D7] mt-1 flex-shrink-0" />
-                      <span className="text-gray-600">Validate product ideas with real users</span>
+                      <span className="text-gray-600">Validate product ideas with real user feedback</span>
                     </li>
                     <li className="flex items-start gap-3">
                       <Check className="w-5 h-5 text-[#7373D7] mt-1 flex-shrink-0" />
@@ -666,8 +677,8 @@ export default function Home() {
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-12">
               <div>
-                <h2 className="text-3xl font-bold text-gray-900 mb-3">Current opportunities</h2>
-                <p className="text-gray-600">Real projects, partnerships, and funding opportunities</p>
+                <h2 className="text-3xl font-bold text-gray-900 mb-3">Opportunities on Lattis</h2>
+                <p className="text-gray-600">Discover real projects, internships, and partnerships from early-stage startups.</p>
               </div>
               <Link 
                 href="/opportunities" 
@@ -688,7 +699,7 @@ export default function Home() {
                       👨‍💻
                     </div>
                     <div>
-                      <h3 className="font-semibold text-gray-900">CampusConnect</h3>
+                      <h3 className="font-semibold text-gray-900">Fintech App Redesign</h3>
                       <p className="text-gray-500 text-sm">Remote</p>
                     </div>
                   </div>
@@ -697,7 +708,7 @@ export default function Home() {
                 <div className="mb-6 flex-grow">
                   <h4 className="font-semibold text-gray-900 text-lg mb-3">UI/UX Design Intern</h4>
                   <p className="text-gray-600 text-sm mb-4 leading-relaxed">
-                    Help design a platform connecting students with campus events. Early-stage startup looking for students passionate about improving campus life. Portfolio projects welcome.
+                    Help redesign a customer dashboard for an early-stage fintech startup. Ideal for designers looking to build their portfolio with real product work.
                   </p>
                 </div>
                 
@@ -705,11 +716,11 @@ export default function Home() {
                   <span className="px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-xs font-medium">
                     Part-time
                   </span>
-                  <span className="text-xs text-gray-500">3-5 applicants</span>
+                  <span className="text-xs text-gray-500"> Portfolio encouraged</span>
                 </div>
                 
                 <button className="w-full py-3 border border-gray-200 text-gray-700 rounded-lg hover:border-[#7373D7] hover:text-[#7373D7] font-medium text-sm transition-colors mt-auto">
-                  Apply now
+                  View Details →
                 </button>
               </div>
 
@@ -722,28 +733,28 @@ export default function Home() {
                       🍃
                     </div>
                     <div>
-                      <h3 className="font-semibold text-gray-900">EcoBuddy</h3>
-                      <p className="text-gray-500 text-sm">Pre-seed</p>
+                      <h3 className="font-semibold text-gray-900">Sustainability App Testing</h3>
+                      <p className="text-gray-500 text-sm">Remote</p>
                     </div>
                   </div>
                 </div>
                 
                 <div className="mb-6 flex-grow">
-                  <h4 className="font-semibold text-gray-900 text-lg mb-3">Feedback & Testing</h4>
+                  <h4 className="font-semibold text-gray-900 text-lg mb-3">Product Feedback & Beta Testing</h4>
                   <p className="text-gray-600 text-sm mb-4 leading-relaxed">
-                    Testing sustainable shopping app with 200+ beta users. Looking for early feedback and user testing from environmentally-conscious students.
+                    Help shape an early-stage sustainability platform by testing features and providing user feedback. Great for students interested in tech, design, or environmental impact.
                   </p>
                 </div>
                 
                 <div className="flex items-center justify-between mb-6">
                   <span className="px-3 py-1 bg-green-50 text-green-700 rounded-full text-xs font-medium">
-                    Pre-launch
+                    Project-based
                   </span>
-                  <span className="text-xs text-gray-500">Open for testing</span>
+                  <span className="text-xs text-gray-500"> No experience required</span>
                 </div>
                 
                 <button className="w-full py-3 border border-gray-200 text-gray-700 rounded-lg hover:border-[#7373D7] hover:text-[#7373D7] font-medium text-sm transition-colors mt-auto">
-                  Give feedback
+                  Join Testing →
                 </button>
               </div>
 
@@ -756,8 +767,8 @@ export default function Home() {
                       📚
                     </div>
                     <div>
-                      <h3 className="font-semibold text-gray-900">StudyPool</h3>
-                      <p className="text-gray-500 text-sm">Co-founder needed</p>
+                      <h3 className="font-semibold text-gray-900">AI EdTech Co-founder Search</h3>
+                      <p className="text-gray-500 text-sm">Remote</p>
                     </div>
                   </div>
                 </div>
@@ -765,19 +776,19 @@ export default function Home() {
                 <div className="mb-6 flex-grow">
                   <h4 className="font-semibold text-gray-900 text-lg mb-3">Technical Co-founder</h4>
                   <p className="text-gray-600 text-sm mb-4 leading-relaxed">
-                    Looking for a technical co-founder to build a peer-to-peer study platform. Currently has MVP with 50 active student users. Equity-based opportunity.
+                    A founder with background in education is looking for a full-stack developer to join as co-founder and help build an AI-powered learning platform from the ground up.
                   </p>
                 </div>
                 
                 <div className="flex items-center justify-between mb-6">
                   <span className="px-3 py-1 bg-purple-50 text-purple-700 rounded-full text-xs font-medium">
-                    Equity
+                    Equity role
                   </span>
-                  <span className="text-xs text-gray-500">2 founders onboard</span>
+                  <span className="text-xs text-gray-500">Full-stack development</span>
                 </div>
                 
                 <button className="w-full py-3 border border-gray-200 text-gray-700 rounded-lg hover:border-[#7373D7] hover:text-[#7373D7] font-medium text-sm transition-colors mt-auto">
-                  Connect
+                  Connect with Founder →
                 </button>
               </div>
             </div>
@@ -789,9 +800,9 @@ export default function Home() {
                     <Users className="w-6 h-6 text-[#7373D7]" />
                   </div>
                   <div>
-                    <h4 className="font-semibold text-gray-900 mb-1">Looking for early feedback?</h4>
+                    <h4 className="font-semibold text-gray-900 mb-1">Have an early-stage idea?</h4>
                     <p className="text-gray-600 text-sm">
-                      Share your startup idea with our community of students and get valuable insights
+                      Share your startup concept with our early community and get constructive feedback
                     </p>
                   </div>
                 </div>
@@ -805,7 +816,7 @@ export default function Home() {
                   <div>
                     <h4 className="font-semibold text-gray-900 mb-1">Want real startup experience?</h4>
                     <p className="text-gray-600 text-sm">
-                      Join early-stage projects and build your portfolio while learning
+                      Join early-stage projects and build your portfolio with hands-on work
                     </p>
                   </div>
                 </div>
@@ -821,14 +832,14 @@ export default function Home() {
               Join a community built for startups—from the start
             </h2>
             <p className="text-white/90 mb-10 max-w-xl mx-auto text-lg">
-              Where students learn, founders build, and investors discover—all in one place designed for early-stage innovation.
+              Where professionals learn, founders build, investors discover, and incubators nurture—all in one platform designed for early-stage collaboration.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
                 href="/signup"
                 className="bg-white text-[#7373D7] px-8 py-3.5 rounded-lg hover:bg-gray-50 font-semibold text-base transition-colors"
               >
-                Sign up early
+                Join the waitlist
               </Link>
               <Link
                 href="/demo"
