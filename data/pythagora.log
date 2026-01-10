@@ -1,0 +1,35 @@
+2026-01-09T06:08:43.618Z INFO Is remote: false
+2026-01-09T06:08:43.620Z INFO Starting Local. Installation path: c:\Users\jaypalsingh patil\Documents\python practicals\MiniProject
+2026-01-09T06:08:43.621Z INFO [MainProvider] Creating new MainProvider instance...
+2026-01-09T06:08:43.622Z INFO [TabsManager] Code view listener set up at initialization
+2026-01-09T06:08:43.623Z INFO Installation path exists: c:\Users\jaypalsingh patil\Documents\python practicals\MiniProject
+2026-01-09T06:08:43.624Z INFO Initializing database with URL: file:c:\Users\jaypalsingh patil\Documents\python practicals\MiniProject\pythagora-core\data\database\pythagora.db
+2026-01-09T06:08:43.630Z INFO Database file exists, skipping prisma generate/push for faster startup
+2026-01-09T06:08:43.631Z INFO Database initialized successfully
+2026-01-09T06:08:43.632Z INFO [Migration] Checking for database migration...
+2026-01-09T06:08:43.718Z INFO [Migration] No migration needed
+2026-01-09T06:13:45.628Z INFO Closing entire Pythagora extension...
+2026-01-09T06:13:45.638Z ERROR Error closing extension
+Error: Canceled
+Stack: Canceled: Canceled
+	at new OU (file:///c:/Users/jaypalsingh%20patil/AppData/Local/Programs/Microsoft%20VS%20Code/resources/app/out/vs/workbench/api/node/extensionHostProcess.js:29:120707)
+	at AE.U (file:///c:/Users/jaypalsingh%20patil/AppData/Local/Programs/Microsoft%20VS%20Code/resources/app/out/vs/workbench/api/node/extensionHostProcess.js:29:125317)
+	at s.<computed>.n.charCodeAt.s.<computed> (file:///c:/Users/jaypalsingh%20patil/AppData/Local/Programs/Microsoft%20VS%20Code/resources/app/out/vs/workbench/api/node/extensionHostProcess.js:29:122811)
+	at mA.g (file:///c:/Users/jaypalsingh%20patil/AppData/Local/Programs/Microsoft%20VS%20Code/resources/app/out/vs/workbench/api/node/extensionHostProcess.js:116:41231)
+	at mA.executeCommand (file:///c:/Users/jaypalsingh%20patil/AppData/Local/Programs/Microsoft%20VS%20Code/resources/app/out/vs/workbench/api/node/extensionHostProcess.js:116:40735)
+	at Object.executeCommand (file:///c:/Users/jaypalsingh%20patil/AppData/Local/Programs/Microsoft%20VS%20Code/resources/app/out/vs/workbench/api/node/extensionHostProcess.js:213:102115)
+	at closeEntirePythagoraExtension (c:\Users\jaypalsingh patil\.vscode\extensions\pythagoratechnologies.pythagora-vs-code-2.6.19\out\extension.js:542:31)
+	at Object.deactivate (c:\Users\jaypalsingh patil\.vscode\extensions\pythagoratechnologies.pythagora-vs-code-2.6.19\out\extension.js:409:15)
+	at kK.eb (file:///c:/Users/jaypalsingh%20patil/AppData/Local/Programs/Microsoft%20VS%20Code/resources/app/out/vs/workbench/api/node/extensionHostProcess.js:120:11850)
+	at file:///c:/Users/jaypalsingh%20patil/AppData/Local/Programs/Microsoft%20VS%20Code/resources/app/out/vs/workbench/api/node/extensionHostProcess.js:120:10000
+	at Array.map (<anonymous>)
+	at kK.$ (file:///c:/Users/jaypalsingh%20patil/AppData/Local/Programs/Microsoft%20VS%20Code/resources/app/out/vs/workbench/api/node/extensionHostProcess.js:120:9988)
+	at kK.terminate (file:///c:/Users/jaypalsingh%20patil/AppData/Local/Programs/Microsoft%20VS%20Code/resources/app/out/vs/workbench/api/node/extensionHostProcess.js:120:10231)
+	at UM.terminate (file:///c:/Users/jaypalsingh%20patil/AppData/Local/Programs/Microsoft%20VS%20Code/resources/app/out/vs/workbench/api/node/extensionHostProcess.js:122:914)
+	at _s (file:///c:/Users/jaypalsingh%20patil/AppData/Local/Programs/Microsoft%20VS%20Code/resources/app/out/vs/workbench/api/node/extensionHostProcess.js:405:11135)
+	at MessagePortMain.<anonymous> (file:///c:/Users/jaypalsingh%20patil/AppData/Local/Programs/Microsoft%20VS%20Code/resources/app/out/vs/workbench/api/node/extensionHostProcess.js:405:7610)
+	at MessagePortMain.emit (node:events:519:28)
+	at MessagePortMain._internalPort.emit (node:electron/js2c/utility_init:2:2959)
+Extra context: {
+  "message": "Canceled"
+}
