@@ -415,7 +415,7 @@ export default function Home() {
 </section>
 
 
-        {/* For Students Section */}
+        {/* For Professionals Section */}
         <section id="for-students" className="py-20 bg-gray-50">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16">
@@ -672,6 +672,103 @@ export default function Home() {
           </div>
         </section>
 
+         {/* For Incubators Section */}
+        <section id="for-students" className="py-20 bg-gray-50">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-16">
+              <h2 className="text-3xl font-bold text-gray-900 mb-4">
+                Incubators & Accelerators: Build Your Founder Ecosystem
+              </h2>
+              <p className="text-gray-600 max-w-2xl mx-auto">
+                Empower early-stage startups with the right talent, mentors, and investor access — all in one platform.
+              </p>
+            </div>
+            
+            <div className="bg-white rounded-2xl p-8 border border-gray-100 shadow-sm">
+              <div className="grid md:grid-cols-2 gap-8 items-center">
+                <div>
+                  <div className="inline-flex items-center gap-2 bg-[#7373D7]/10 text-[#7373D7] px-3 py-1 rounded-full text-sm font-medium mb-6">
+                    <GraduationCap className="w-4 h-4" />
+                    For Incubators & Accelerators
+                  </div>
+                  <h3 className="text-2xl font-bold text-gray-900 mb-4">
+                    Build a stronger founder pipeline with early access to talent, mentors, and investors.
+                  </h3>
+                  <ul className="space-y-4 mb-8">
+                    <li className="flex items-start gap-3">
+                      <Check className="w-5 h-5 text-[#7373D7] mt-1 flex-shrink-0" />
+                      <span className="text-gray-600">Discover Startups Early – Find founders building and seeking support</span>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <Check className="w-5 h-5 text-[#7373D7] mt-1 flex-shrink-0" />
+                      <span className="text-gray-600">Connect Talent – Help startups find interns, co-founders, early hires</span>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <Check className="w-5 h-5 text-[#7373D7] mt-1 flex-shrink-0" />
+                      <span className="text-gray-600">Match Mentors – Introduce founders to experienced advisors</span>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <Check className="w-5 h-5 text-[#7373D7] mt-1 flex-shrink-0" />
+                      <span className="text-gray-600">Expand Investor Access – Link your cohort with angels and early-stage funds</span>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <Check className="w-5 h-5 text-[#7373D7] mt-1 flex-shrink-0" />
+                      <span className="text-gray-600">Track founder engagement – Monitor how startups in your program are growing and connecting</span>
+                    </li>
+                  </ul>
+                  <Link
+                    href="/signup"
+                    className="inline-flex items-center gap-2 bg-gradient-to-r from-[#7373D7] to-[#6363C7] text-white px-6 py-3 rounded-lg hover:opacity-95 transition-opacity font-medium"
+                  >
+                    Join as an Incubator Partner →
+                    <ArrowRight className="w-4 h-4" />
+                  </Link>
+                </div>
+                <div className="bg-gray-50 rounded-xl p-6 border border-gray-200">
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-4 p-4 bg-white rounded-lg border border-gray-200">
+                      <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                        <Briefcase className="w-6 h-6 text-blue-600" />
+                      </div>
+                      <div>
+                        <h4 className="font-semibold text-gray-900">List Your Program</h4>
+                        <p className="text-gray-600 text-sm">Create a profile highlighting your focus areas and resources</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-4 p-4 bg-white rounded-lg border border-gray-200">
+                      <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+                        <Users className="w-6 h-6 text-green-600" />
+                      </div>
+                      <div>
+                        <h4 className="font-semibold text-gray-900">Engage with Founders</h4>
+                        <p className="text-gray-600 text-sm"> Browse and message startups that fit your criteria</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-4 p-4 bg-white rounded-lg border border-gray-200">
+                      <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
+                        <Sparkles className="w-6 h-6 text-purple-600" />
+                      </div>
+                      <div>
+                        <h4 className="font-semibold text-gray-900">Support Portfolio Growth </h4>
+                        <p className="text-gray-600 text-sm">Post talent needs, mentor roles, and investor intros</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-4 p-4 bg-white rounded-lg border border-gray-200">
+                      <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
+                        <Sparkles className="w-6 h-6 text-purple-600" />
+                      </div>
+                      <div>
+                        <h4 className="font-semibold text-gray-900">Build Your Network</h4>
+                        <p className="text-gray-600 text-sm">Connect with other incubators and investors in the community</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* Opportunities */}
         <section className="py-20 bg-white">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -879,9 +976,10 @@ export default function Home() {
                 <h4 className="font-semibold text-gray-200 mb-6">Platform</h4>
                 <ul className="space-y-3">
                   <li><button onClick={() => scrollToSection('how-it-works')} className="text-gray-400 hover:text-white text-sm transition-colors text-left">How it works</button></li>
-                  <li><button onClick={() => scrollToSection('for-students')} className="text-gray-400 hover:text-white text-sm transition-colors text-left">For Students</button></li>
+                  <li><button onClick={() => scrollToSection('for-students')} className="text-gray-400 hover:text-white text-sm transition-colors text-left">For Professionals </button></li>
                   <li><button onClick={() => scrollToSection('for-startups')} className="text-gray-400 hover:text-white text-sm transition-colors text-left">For Startups</button></li>
                   <li><button onClick={() => scrollToSection('for-investors')} className="text-gray-400 hover:text-white text-sm transition-colors text-left">For Investors</button></li>
+                  <li><button onClick={() => scrollToSection('for-investors')} className="text-gray-400 hover:text-white text-sm transition-colors text-left">For Incubators</button></li>
                 </ul>
               </div>
 
