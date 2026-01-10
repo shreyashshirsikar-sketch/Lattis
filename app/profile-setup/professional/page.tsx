@@ -7,8 +7,11 @@ import {
   Briefcase, GraduationCap, Target, 
   FileText, Globe, Award, ArrowRight,
   AlertCircle, UserCheck,
-  Loader2
+  Loader2,
+  ArrowLeft,
+  Save
 } from 'lucide-react';
+import { useAutoSave } from '@/app/hooks/useAutoSave';
 
 export default function ProfessionalSetup() {
   const router = useRouter();
@@ -66,23 +69,47 @@ export default function ProfessionalSetup() {
     'Not actively looking'
   ];
 
+  // Combine form and skills for auto-save
+  const professionalData = {
+    form,
+    skills
+  };
+
+  // Use auto-save hook
+  const { isSaving, lastSaved, manualSave } = useAutoSave({
+    data: professionalData,
+    storageKey: 'professionalPrefs',
+    delay: 1500,
+    onSave: (savedData) => {
+      console.log('Auto-saved professional preferences:', savedData);
+    }
+  });
+
   // Load saved data
   useEffect(() => {
     const savedData = localStorage.getItem('profileData');
-    if (savedData) {
-      const data = JSON.parse(savedData);
-      setProfileData(data);
-      if (data.location) setForm(prev => ({ ...prev, location: data.location }));
-      
-      // Load saved professional prefs if exists
-      const proPrefs = localStorage.getItem('professionalPrefs');
-      if (proPrefs) {
-        const prefs = JSON.parse(proPrefs);
-        setForm(prefs.form);
-        setSkills(prefs.skills || []);
-      }
+    if (!savedData) {
+      router.push('/profile-setup');
+      return;
     }
-  }, []);
+    
+    const data = JSON.parse(savedData);
+    setProfileData(data);
+    if (data.location) setForm(prev => ({ ...prev, location: data.location }));
+    
+    // Load saved professional prefs if exists
+    const proPrefs = localStorage.getItem('professionalPrefs');
+    if (proPrefs) {
+      const prefs = JSON.parse(proPrefs);
+      setForm(prefs.form);
+      setSkills(prefs.skills || []);
+    }
+  }, [router]);
+
+  const handleGoBack = () => {
+    manualSave(); // Save before going back
+    router.push('/profile-setup/basic');
+  };
 
   const addSkill = () => {
     if (skillInput.trim() && !skills.includes(skillInput.trim())) {
@@ -169,8 +196,8 @@ export default function ProfessionalSetup() {
 
     setLoading(true);
 
-    // Save professional preferences
-    localStorage.setItem('professionalPrefs', JSON.stringify({ form, skills }));
+    // Final manual save before submission
+    manualSave();
 
     // Combine all data
     const savedData = JSON.parse(localStorage.getItem('profileData') || '{}');
@@ -210,7 +237,7 @@ export default function ProfessionalSetup() {
   return (
     <div className="min-h-screen" style={{ backgroundColor: colorScheme.background }}>
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
-        {/* Header Section */}
+        {/* Header Section with Auto-Save Indicator */}
         <div className="mb-12">
           <div className="bg-white border border-gray-200 rounded-xl p-8 shadow-sm">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-8">
@@ -220,36 +247,70 @@ export default function ProfessionalSetup() {
                     <Briefcase className="w-6 h-6 text-white" />
                   </div>
                   <div>
-                    <h1 className="text-3xl font-bold tracking-tight text-gray-900">
+                    <h1 className="text-3xl font-bold tracking-tight" style={{ color: colorScheme.primary }}>
                       Professional Profile Setup
                     </h1>
-                    <p className="text-lg text-gray-600">
+                    <p className="text-lg" style={{ color: colorScheme.secondary }}>
                       Complete your professional profile to unlock opportunities
                     </p>
+                    
+                    {/* Auto-save status indicator */}
+                    <div className="flex items-center gap-2 mt-2">
+                      <div className="flex items-center gap-1">
+                        {isSaving ? (
+                          <>
+                            <div className="w-3 h-3 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+                            <span className="text-xs text-blue-600">Saving...</span>
+                          </>
+                        ) : lastSaved ? (
+                          <>
+                            <Save className="w-3 h-3 text-green-500" />
+                            <span className="text-xs text-gray-500">
+                              Saved {lastSaved.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                            </span>
+                          </>
+                        ) : (
+                          <span className="text-xs text-gray-400">Changes auto-save</span>
+                        )}
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
 
-              {/* Progress Indicator */}
-              <div className="bg-gray-50 border border-gray-200 rounded-xl p-4">
-                <div className="space-y-2">
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm font-medium text-gray-600">
-                      Setup Progress
-                    </span>
-                    <span className="text-sm font-bold text-blue-600">
-                      3/3
-                    </span>
+              {/* Progress Indicator with Back Button */}
+              <div className="flex flex-col items-end gap-4">
+                <button
+                  onClick={handleGoBack}
+                  className="flex items-center gap-2 px-4 py-2 text-gray-600 hover:text-gray-900 font-medium hover:bg-gray-100 rounded-lg transition-colors"
+                >
+                  <ArrowLeft className="w-4 h-4" />
+                  Back to Basic Info
+                </button>
+                
+                <div className="bg-gray-50 border border-gray-200 rounded-xl p-4">
+                  <div className="space-y-2">
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm font-medium" style={{ color: colorScheme.secondary }}>
+                        Setup Progress
+                      </span>
+                      <span className="text-sm font-bold" style={{ color: colorScheme.accent }}>
+                        3/3
+                      </span>
+                    </div>
+                    <div className="w-48 bg-gray-200 rounded-full h-2">
+                      <div 
+                        className="h-2 rounded-full transition-all duration-500"
+                        style={{ 
+                          width: '100%',
+                          backgroundColor: colorScheme.accent 
+                        }}
+                      ></div>
+                    </div>
+                    <p className="text-xs text-gray-500 pt-2">
+                      Step 3: Professional Details
+                    </p>
                   </div>
-                  <div className="w-48 bg-gray-200 rounded-full h-2">
-                    <div 
-                      className="h-2 rounded-full transition-all duration-500 bg-blue-600"
-                      style={{ width: '100%' }}
-                    ></div>
-                  </div>
-                  <p className="text-xs text-gray-500 pt-2">
-                    Step 3: Professional Details
-                  </p>
                 </div>
               </div>
             </div>
@@ -266,7 +327,7 @@ export default function ProfessionalSetup() {
                     <UserCheck className="w-5 h-5 text-blue-600" />
                   </div>
                   <div>
-                    <h2 className="text-xl font-bold text-gray-900">
+                    <h2 className="text-xl font-bold" style={{ color: colorScheme.primary }}>
                       Professional Information
                     </h2>
                     <p className="text-gray-500">Tell us about your career and goals</p>
@@ -278,7 +339,7 @@ export default function ProfessionalSetup() {
                 {/* Role & Experience */}
                 <div className="grid md:grid-cols-2 gap-6">
                   <div className="space-y-3">
-                    <label className="flex items-center gap-2 font-semibold text-sm text-gray-700">
+                    <label className="flex items-center gap-2 font-semibold text-sm" style={{ color: colorScheme.secondary }}>
                       <Briefcase className="w-4 h-4" />
                       Current Role / Area *
                     </label>
@@ -286,7 +347,8 @@ export default function ProfessionalSetup() {
                       type="text"
                       value={form.role}
                       onChange={(e) => setForm(prev => ({ ...prev, role: e.target.value }))}
-                      className="w-full px-4 py-3 bg-white border-2 border-gray-300 rounded-lg focus:border-gray-400 focus:outline-none transition-colors text-gray-900"
+                      className="w-full px-4 py-3 bg-white border-2 border-gray-300 rounded-lg focus:border-gray-400 focus:outline-none transition-colors"
+                      style={{ color: colorScheme.primary }}
                       placeholder="Software Engineer, UX Designer, etc."
                     />
                     {errors.role && (
@@ -298,18 +360,19 @@ export default function ProfessionalSetup() {
                   </div>
 
                   <div className="space-y-3">
-                    <label className="flex items-center gap-2 font-semibold text-sm text-gray-700">
+                    <label className="flex items-center gap-2 font-semibold text-sm" style={{ color: colorScheme.secondary }}>
                       <Award className="w-4 h-4" />
                       Experience Level *
                     </label>
                     <select
                       value={form.experience}
                       onChange={(e) => setForm(prev => ({ ...prev, experience: e.target.value }))}
-                      className="w-full px-4 py-3 bg-white border-2 border-gray-300 rounded-lg focus:border-gray-400 focus:outline-none transition-colors text-gray-900"
+                      className="w-full px-4 py-3 bg-white border-2 border-gray-300 rounded-lg focus:border-gray-400 focus:outline-none transition-colors"
+                      style={{ color: colorScheme.primary }}
                     >
                       <option value="" className="text-gray-500">Select your level</option>
                       {experienceLevels.map((level) => (
-                        <option key={level} value={level} className="text-gray-900">{level}</option>
+                        <option key={level} value={level}>{level}</option>
                       ))}
                     </select>
                     {errors.experience && (
@@ -323,7 +386,7 @@ export default function ProfessionalSetup() {
 
                 {/* Skills Section */}
                 <div className="space-y-3">
-                  <label className="flex items-center gap-2 font-semibold text-sm text-gray-700">
+                  <label className="flex items-center gap-2 font-semibold text-sm" style={{ color: colorScheme.secondary }}>
                     <Target className="w-4 h-4" />
                     Skills & Expertise *
                     <span className="text-xs font-normal text-gray-400">
@@ -337,7 +400,8 @@ export default function ProfessionalSetup() {
                       value={skillInput}
                       onChange={(e) => setSkillInput(e.target.value)}
                       onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addSkill())}
-                      className="flex-1 px-4 py-2 bg-white border-2 border-gray-300 rounded-lg focus:border-gray-400 focus:outline-none transition-colors text-gray-900"
+                      className="flex-1 px-4 py-2 bg-white border-2 border-gray-300 rounded-lg focus:border-gray-400 focus:outline-none transition-colors"
+                      style={{ color: colorScheme.primary }}
                       placeholder="Add skills (React, Design, Marketing, etc.)"
                     />
                     <button
@@ -377,7 +441,7 @@ export default function ProfessionalSetup() {
 
                 {/* Goals Section */}
                 <div className="space-y-3">
-                  <label className="flex items-center gap-2 font-semibold text-sm text-gray-700">
+                  <label className="flex items-center gap-2 font-semibold text-sm" style={{ color: colorScheme.secondary }}>
                     <Target className="w-4 h-4" />
                     Your Goals on Lattis
                     <span className="text-xs font-normal text-gray-400">
@@ -403,10 +467,10 @@ export default function ProfessionalSetup() {
                         >
                           <div className="flex items-start justify-between">
                             <div className="space-y-1">
-                              <span className="font-medium text-gray-900 block">
+                              <span className="font-medium block" style={{ color: colorScheme.primary }}>
                                 {goal.label}
                               </span>
-                              <span className="text-xs text-gray-500 block">
+                              <span className="text-xs block" style={{ color: colorScheme.secondary }}>
                                 {goal.desc}
                               </span>
                             </div>
@@ -424,7 +488,7 @@ export default function ProfessionalSetup() {
                 <div className="grid md:grid-cols-2 gap-6">
                   <div className="space-y-3">
                     <div className="flex items-center justify-between">
-                      <label className="flex items-center gap-2 font-semibold text-sm text-gray-700">
+                      <label className="flex items-center gap-2 font-semibold text-sm" style={{ color: colorScheme.secondary }}>
                         <Globe className="w-4 h-4" />
                         Portfolio Links
                       </label>
@@ -446,7 +510,8 @@ export default function ProfessionalSetup() {
                             type="url"
                             value={link}
                             onChange={(e) => updatePortfolioLink(index, e.target.value)}
-                            className="flex-1 px-4 py-2 bg-white border-2 border-gray-300 rounded-lg focus:border-gray-400 focus:outline-none transition-colors text-gray-900"
+                            className="flex-1 px-4 py-2 bg-white border-2 border-gray-300 rounded-lg focus:border-gray-400 focus:outline-none transition-colors"
+                            style={{ color: colorScheme.primary }}
                             placeholder="https://linkedin.com/in/username"
                           />
                         </div>
@@ -461,7 +526,7 @@ export default function ProfessionalSetup() {
                   </div>
 
                   <div className="space-y-3">
-                    <label className="flex items-center gap-2 font-semibold text-sm text-gray-700">
+                    <label className="flex items-center gap-2 font-semibold text-sm" style={{ color: colorScheme.secondary }}>
                       <FileText className="w-4 h-4" />
                       Resume (Optional)
                     </label>
@@ -494,49 +559,58 @@ export default function ProfessionalSetup() {
 
                 {/* Availability */}
                 <div className="space-y-3">
-                  <label className="flex items-center gap-2 font-semibold text-sm text-gray-700">
+                  <label className="flex items-center gap-2 font-semibold text-sm" style={{ color: colorScheme.secondary }}>
                     <Briefcase className="w-4 h-4" />
                     Current Availability
                   </label>
                   <select
                     value={form.availability}
                     onChange={(e) => setForm(prev => ({ ...prev, availability: e.target.value }))}
-                    className="w-full px-4 py-3 bg-white border-2 border-gray-300 rounded-lg focus:border-gray-400 focus:outline-none transition-colors text-gray-900"
+                    className="w-full px-4 py-3 bg-white border-2 border-gray-300 rounded-lg focus:border-gray-400 focus:outline-none transition-colors"
+                    style={{ color: colorScheme.primary }}
                   >
                     <option value="" className="text-gray-500">Select availability</option>
                     {availabilityOptions.map((option) => (
-                      <option key={option} value={option} className="text-gray-900">{option}</option>
+                      <option key={option} value={option}>{option}</option>
                     ))}
                   </select>
                 </div>
 
                 {/* Form Actions */}
-                <div className="pt-6 border-t border-gray-100">
-                  <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-                    <div className="flex items-center gap-2 text-sm text-gray-600">
-                      <Check className="w-4 h-4 text-green-500" />
-                      <span>Your profile will be visible to relevant opportunities</span>
-                    </div>
-                    
-                    <button
-                      type="submit"
-                      disabled={loading}
-                      className="px-8 py-3 font-semibold rounded-lg transition-all duration-300 shadow-sm hover:shadow-md flex items-center justify-center gap-2 group min-w-[200px] bg-blue-600 text-white hover:bg-blue-700"
-                    >
-                      {loading ? (
-                        <>
-                          <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                          <span>Completing your profile...</span>
-                        </>
-                      ) : (
-                        <>
-                          <span>Complete Profile</span>
-                          <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
-                        </>
-                      )}
-                    </button>
-                  </div>
-                </div>
+<div className="pt-6 border-t border-gray-100">
+  <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+    <div className="flex items-center gap-2 text-sm" style={{ color: colorScheme.secondary }}>
+      <Check className="w-4 h-4 text-green-500" />
+      <span>Your profile will be visible to relevant opportunities</span>
+    </div>
+    
+    <div className="flex items-center gap-3">
+      {/* REMOVED BACK BUTTON HERE */}
+      
+      <button
+        type="submit"
+        disabled={loading}
+        className="px-8 py-3 font-semibold rounded-lg transition-all duration-300 shadow-sm hover:shadow-md flex items-center justify-center gap-2 group min-w-[200px]"
+        style={{ 
+          backgroundColor: colorScheme.accent,
+          color: 'white'
+        }}
+      >
+        {loading ? (
+          <>
+            <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+            <span>Completing your profile...</span>
+          </>
+        ) : (
+          <>
+            <span>Complete Profile</span>
+            <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
+          </>
+        )}
+      </button>
+    </div>
+  </div>
+</div>
               </form>
             </div>
           </div>
@@ -546,7 +620,7 @@ export default function ProfessionalSetup() {
             <div className="sticky top-8 space-y-6">
               <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
                 <div className="mb-6">
-                  <h3 className="text-lg font-bold text-gray-900 mb-2">
+                  <h3 className="text-lg font-bold" style={{ color: colorScheme.primary }}>
                     Profile Preview
                   </h3>
                   <p className="text-sm text-gray-500">How recruiters will see your profile</p>
@@ -565,25 +639,25 @@ export default function ProfessionalSetup() {
                   <div className="grid grid-cols-2 gap-3">
                     <div className="p-3 bg-gray-50 rounded-lg border border-gray-100">
                       <p className="text-xs text-gray-400 mb-1">Experience</p>
-                      <p className="font-medium text-gray-900">
+                      <p className="font-medium" style={{ color: colorScheme.primary }}>
                         {form.experience || 'Not set'}
                       </p>
                     </div>
                     <div className="p-3 bg-gray-50 rounded-lg border border-gray-100">
                       <p className="text-xs text-gray-400 mb-1">Skills</p>
-                      <p className="font-medium text-gray-900">
+                      <p className="font-medium" style={{ color: colorScheme.primary }}>
                         {skills.length || 0}
                       </p>
                     </div>
                     <div className="p-3 bg-gray-50 rounded-lg border border-gray-100">
                       <p className="text-xs text-gray-400 mb-1">Goals</p>
-                      <p className="font-medium text-gray-900">
+                      <p className="font-medium" style={{ color: colorScheme.primary }}>
                         {form.goals.length || 0}
                       </p>
                     </div>
                     <div className="p-3 bg-gray-50 rounded-lg border border-gray-100">
                       <p className="text-xs text-gray-400 mb-1">Availability</p>
-                      <p className="font-medium text-gray-900">
+                      <p className="font-medium" style={{ color: colorScheme.primary }}>
                         {form.availability || 'Not set'}
                       </p>
                     </div>
@@ -596,7 +670,7 @@ export default function ProfessionalSetup() {
                     </div>
                     <div className="flex flex-wrap gap-1">
                       {skills.slice(0, 4).map((skill) => (
-                        <span key={skill} className="px-2 py-1 bg-white rounded text-xs font-medium text-gray-700">
+                        <span key={skill} className="px-2 py-1 bg-white rounded text-xs font-medium" style={{ color: colorScheme.primary }}>
                           {skill}
                         </span>
                       ))}
@@ -616,10 +690,10 @@ export default function ProfessionalSetup() {
                     <Award className="w-3 h-3 text-white" />
                   </div>
                   <div>
-                    <h4 className="font-semibold text-sm text-gray-900 mb-2">
+                    <h4 className="font-semibold text-sm" style={{ color: colorScheme.primary }}>
                       Benefits of Completing Your Profile
                     </h4>
-                    <ul className="space-y-2 text-sm text-gray-700">
+                    <ul className="space-y-2 text-sm" style={{ color: colorScheme.secondary }}>
                       <li className="flex items-center gap-2">
                         <Check className="w-3 h-3 text-green-500" />
                         <span>Access to exclusive job opportunities</span>

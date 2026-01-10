@@ -100,23 +100,24 @@ export default function RoleSelection() {
 
               {/* Progress Indicator */}
               <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 min-w-[180px]">
-                <div className="space-y-2">
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm font-medium" style={{ color: colorScheme.secondary }}>
-                      Setup Progress
-                    </span>
-                    <span className="text-sm font-bold" style={{ color: colorScheme.accent }}>
-                      0/3
-                    </span>
-                  </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2">
-                    <div className="h-2 rounded-full" style={{ width: '0%', backgroundColor: colorScheme.accent }}></div>
-                  </div>
-                  <p className="text-xs text-gray-500 pt-2">
-                    Step 1 of 3: Role Selection
-                  </p>
-                </div>
-              </div>
+  <div className="space-y-2">
+    <div className="flex justify-between items-center">
+      <span className="text-sm font-medium" style={{ color: colorScheme.secondary }}>
+        Setup Progress
+      </span>
+      <span className="text-sm font-bold" style={{ color: colorScheme.accent }}>
+        1/3
+      </span>
+    </div>
+    <div className="w-full bg-gray-200 rounded-full h-2">
+      <div className="h-2 rounded-full transition-all duration-500" 
+           style={{ width: '33%', backgroundColor: colorScheme.accent }}></div>
+    </div>
+    <p className="text-xs text-gray-500 pt-2">
+      Step 1 of 3: Role Selection
+    </p>
+  </div>
+</div>
             </div>
           </div>
         </div>

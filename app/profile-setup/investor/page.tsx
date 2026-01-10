@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { ArrowLeft } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { 
   Check, Globe, Eye, EyeOff, TrendingUp, 
@@ -8,15 +9,17 @@ import {
   Shield, Users, ArrowRight, AlertCircle,
   Briefcase,
   DollarSign,
-  Loader2
+  Loader2,
+  Save
 } from 'lucide-react';
+import { useAutoSave } from '@/app/hooks/useAutoSave';
 
 export default function InvestorSetup() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [profileData, setProfileData] = useState<any>(null);
-
+  
   const colorScheme = {
     primary: '#0F0F0F',
     secondary: '#4B5563',
@@ -39,6 +42,16 @@ export default function InvestorSetup() {
     showPublic: true,
     portfolioSize: '',
     typicalCheckSize: ''
+  });
+
+  // Use auto-save hook
+  const { isSaving, lastSaved, manualSave } = useAutoSave({
+    data: form,
+    storageKey: 'investorPrefs',
+    delay: 1500,
+    onSave: (savedData) => {
+      console.log('Auto-saved investor preferences:', savedData);
+    }
   });
 
   const investorTypes = [
@@ -115,20 +128,28 @@ export default function InvestorSetup() {
     '15+ years'
   ];
 
-  // Load saved profile data
+  // Load saved profile data and investor preferences
   useEffect(() => {
     const savedData = localStorage.getItem('profileData');
-    if (savedData) {
-      const data = JSON.parse(savedData);
-      setProfileData(data);
-      
-      // Load saved investor preferences if exists
-      const investorPrefs = localStorage.getItem('investorPrefs');
-      if (investorPrefs) {
-        setForm(JSON.parse(investorPrefs));
-      }
+    if (!savedData) {
+      router.push('/profile-setup');
+      return;
     }
-  }, []);
+    
+    const data = JSON.parse(savedData);
+    setProfileData(data);
+    
+    // Load saved investor preferences if exists
+    const investorPrefs = localStorage.getItem('investorPrefs');
+    if (investorPrefs) {
+      setForm(JSON.parse(investorPrefs));
+    }
+  }, [router]);
+
+  const handleGoBack = () => {
+    manualSave(); // Save before going back
+    router.push('/profile-setup/basic');
+  };
 
   const handleIndustryToggle = (industry: string) => {
     setForm(prev => ({
@@ -175,8 +196,8 @@ export default function InvestorSetup() {
 
     setLoading(true);
 
-    // Save investor preferences
-    localStorage.setItem('investorPrefs', JSON.stringify(form));
+    // Final manual save before submission
+    manualSave();
 
     // Combine data
     const savedData = JSON.parse(localStorage.getItem('profileData') || '{}');
@@ -195,7 +216,7 @@ export default function InvestorSetup() {
     // Simulate API call
     await new Promise(resolve => setTimeout(resolve, 1500));
     
-    // Clear setup data
+    // Clear setup data (optional, depends on your flow)
     localStorage.removeItem('profileData');
     localStorage.removeItem('selectedRole');
     localStorage.removeItem('investorPrefs');
@@ -215,7 +236,7 @@ export default function InvestorSetup() {
   return (
     <div className="min-h-screen" style={{ backgroundColor: colorScheme.background }}>
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
-        {/* Header Section */}
+        {/* Header Section with Auto-Save Indicator */}
         <div className="mb-12">
           <div className="bg-white border border-gray-200 rounded-xl p-8 shadow-sm">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-8">
@@ -231,33 +252,64 @@ export default function InvestorSetup() {
                     <p className="text-lg" style={{ color: colorScheme.secondary }}>
                       Complete your investor profile to access deals
                     </p>
+                    
+                    {/* Auto-save status indicator */}
+                    <div className="flex items-center gap-2 mt-2">
+                      <div className="flex items-center gap-1">
+                        {isSaving ? (
+                          <>
+                            <div className="w-3 h-3 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+                            <span className="text-xs text-blue-600">Saving...</span>
+                          </>
+                        ) : lastSaved ? (
+                          <>
+                            <Save className="w-3 h-3 text-green-500" />
+                            <span className="text-xs text-gray-500">
+                              Saved {lastSaved.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                            </span>
+                          </>
+                        ) : (
+                          <span className="text-xs text-gray-400">Changes auto-save</span>
+                        )}
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
 
-              {/* Progress Indicator */}
-              <div className="bg-gray-50 border border-gray-200 rounded-xl p-4">
-                <div className="space-y-2">
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm font-medium" style={{ color: colorScheme.secondary }}>
-                      Setup Progress
-                    </span>
-                    <span className="text-sm font-bold" style={{ color: colorScheme.accent }}>
-                      3/3
-                    </span>
+              {/* Progress Indicator with Back Button */}
+              <div className="flex flex-col items-end gap-4">
+                <button
+                  onClick={handleGoBack}
+                  className="flex items-center gap-2 px-4 py-2 text-gray-600 hover:text-gray-900 font-medium hover:bg-gray-100 rounded-lg transition-colors"
+                >
+                  <ArrowLeft className="w-4 h-4" />
+                  Back to Basic Info
+                </button>
+                
+                <div className="bg-gray-50 border border-gray-200 rounded-xl p-4">
+                  <div className="space-y-2">
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm font-medium" style={{ color: colorScheme.secondary }}>
+                        Setup Progress
+                      </span>
+                      <span className="text-sm font-bold" style={{ color: colorScheme.accent }}>
+                        3/3
+                      </span>
+                    </div>
+                    <div className="w-48 bg-gray-200 rounded-full h-2">
+                      <div 
+                        className="h-2 rounded-full transition-all duration-500"
+                        style={{ 
+                          width: '100%',
+                          backgroundColor: colorScheme.accent 
+                        }}
+                      ></div>
+                    </div>
+                    <p className="text-xs text-gray-500 pt-2">
+                      Step 3: Investor Preferences
+                    </p>
                   </div>
-                  <div className="w-48 bg-gray-200 rounded-full h-2">
-                    <div 
-                      className="h-2 rounded-full transition-all duration-500"
-                      style={{ 
-                        width: '100%',
-                        backgroundColor: colorScheme.accent 
-                      }}
-                    ></div>
-                  </div>
-                  <p className="text-xs text-gray-500 pt-2">
-                    Step 3: Investor Preferences
-                  </p>
                 </div>
               </div>
             </div>
@@ -552,7 +604,7 @@ export default function InvestorSetup() {
                   </div>
                 </div>
 
-                {/* Form Actions */}
+                {/* Updated Form Actions with Back Button */}
                 <div className="pt-6 border-t border-gray-100">
                   <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
                     <div className="flex items-center gap-2 text-sm text-gray-600">
@@ -560,23 +612,26 @@ export default function InvestorSetup() {
                       <span>Your data is encrypted and secure</span>
                     </div>
                     
-                    <button
-                      type="submit"
-                      disabled={loading}
-                      className="px-8 py-3 font-semibold rounded-lg transition-all duration-300 shadow-sm hover:shadow-md flex items-center justify-center gap-2 group min-w-[200px] bg-blue-600 text-white hover:bg-blue-700"
-                    >
-                      {loading ? (
-                        <>
-                          <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                          <span>Setting up your profile...</span>
-                        </>
-                      ) : (
-                        <>
-                          <span>Complete Investor Profile</span>
-                          <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
-                        </>
-                      )}
-                    </button>
+                    <div className="flex items-center gap-3">
+                      
+                      <button
+                        type="submit"
+                        disabled={loading}
+                        className="px-8 py-3 font-semibold rounded-lg transition-all duration-300 shadow-sm hover:shadow-md flex items-center justify-center gap-2 group min-w-[200px] bg-blue-600 text-white hover:bg-blue-700"
+                      >
+                        {loading ? (
+                          <>
+                            <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                            <span>Setting up your profile...</span>
+                          </>
+                        ) : (
+                          <>
+                            <span>Complete Investor Profile</span>
+                            <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
+                          </>
+                        )}
+                      </button>
+                    </div>
                   </div>
                 </div>
               </form>

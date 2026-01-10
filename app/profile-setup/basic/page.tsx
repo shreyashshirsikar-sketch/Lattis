@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { ArrowRight, Upload, Camera, MapPin, User, AtSign, FileText, Check, AlertCircle } from 'lucide-react';
+import { ArrowRight, Upload, Camera, MapPin, User, AtSign, FileText, Check, AlertCircle, ArrowLeft, Save } from 'lucide-react';
+import { useAutoSave } from '@/app/hooks/useAutoSave'; // Import the hook
 
 export default function BasicProfile() {
   const router = useRouter();
@@ -20,15 +21,26 @@ export default function BasicProfile() {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [photoPreview, setPhotoPreview] = useState('');
   const [uploading, setUploading] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const colorScheme = {
-    primary: '#0F0F0F',       // 60% - Main text
-    secondary: '#4B5563',     // 30% - Secondary text
-    accent: '#6366F1',        // 10% - Accent color (Indigo)
-    background: '#F9FAFB',    // Background
-    surface: '#FFFFFF',       // Surface/Cards
-    border: '#E5E7EB'         // Borders
+    primary: '#0F0F0F',
+    secondary: '#4B5563',
+    accent: '#6366F1',
+    background: '#F9FAFB',
+    surface: '#FFFFFF',
+    border: '#E5E7EB'
   };
+
+  // Use the auto-save hook
+  const { isSaving, lastSaved, manualSave } = useAutoSave({
+    data: form,
+    storageKey: 'profileData',
+    delay: 1500, // Save after 1.5 seconds of inactivity
+    onSave: (savedData) => {
+      console.log('Auto-saved basic profile data:', savedData);
+    }
+  });
 
   // Load saved data if exists
   useEffect(() => {
@@ -36,17 +48,21 @@ export default function BasicProfile() {
     const savedRole = localStorage.getItem('selectedRole');
     
     if (savedData) {
-      const data = JSON.parse(savedData);
-      setForm(prev => ({ ...prev, ...data }));
-      if (data.photo) setPhotoPreview(data.photo);
+      try {
+        const data = JSON.parse(savedData);
+        setForm(prev => ({ ...prev, ...data }));
+        if (data.photo) setPhotoPreview(data.photo);
+      } catch (error) {
+        console.error('Failed to parse saved data:', error);
+      }
     }
     
-    // Ensure role is set
     if (!role && savedRole) {
       router.replace(`/profile-setup/basic?role=${savedRole}`);
     }
   }, [role, router]);
 
+  // Handle photo upload
   const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -64,8 +80,16 @@ export default function BasicProfile() {
       setPhotoPreview(result);
       setUploading(false);
       setErrors(prev => ({ ...prev, photo: '' }));
+      // Trigger manual save after photo upload
+      manualSave();
     };
     reader.readAsDataURL(file);
+  };
+
+  const handleGoBack = () => {
+    // Manually save before navigating back
+    manualSave();
+    router.push('/profile-setup');
   };
 
   const validateForm = () => {
@@ -98,33 +122,31 @@ export default function BasicProfile() {
       return;
     }
     
-    // Save to localStorage
+    setIsSubmitting(true);
+    
+    // Final manual save before navigation
     const profileData = { ...form, role };
     localStorage.setItem('profileData', JSON.stringify(profileData));
     
-    // Go to role-specific setup based on role
-    if (role === 'investor') {
-      router.push('/profile-setup/investor');
-    } else if (role === 'professional') {
-      router.push('/profile-setup/professional');
-    } else if (role === 'startup') {
-      router.push('/profile-setup/startup');
-    } else {
-      // Fallback to role selection
-      router.push('/profile-setup');
-    }
+    // Simulate API call
+    setTimeout(() => {
+      if (role === 'investor') {
+        router.push('/profile-setup/investor');
+      } else if (role === 'professional') {
+        router.push('/profile-setup/professional');
+      } else if (role === 'startup') {
+        router.push('/profile-setup/startup');
+      } else {
+        router.push('/profile-setup');
+      }
+      setIsSubmitting(false);
+    }, 500);
   };
-
-  useEffect(() => {
-    if (Object.keys(errors).length > 0) {
-      validateForm();
-    }
-  }, [form]);
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: colorScheme.background }}>
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
-        {/* Header Section */}
+        {/* Header with Auto-Save Indicator */}
         <div className="mb-12">
           <div className="bg-white border border-gray-200 rounded-lg p-6 mb-6 shadow-sm">
             <div className="flex flex-col md:flex-row md:items-center justify-between">
@@ -139,24 +161,53 @@ export default function BasicProfile() {
                       Profile Setup
                     </h1>
                     <p className="text-gray-500">Basic Information • Step 2/3</p>
+                    
+                    {/* Auto-save status indicator */}
+                    <div className="flex items-center gap-2 mt-1">
+                      <div className="flex items-center gap-1">
+                        {isSaving ? (
+                          <>
+                            <div className="w-3 h-3 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+                            <span className="text-xs text-blue-600">Saving...</span>
+                          </>
+                        ) : lastSaved ? (
+                          <>
+                            <Save className="w-3 h-3 text-green-500" />
+                            <span className="text-xs text-gray-500">
+                              Saved {lastSaved.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                            </span>
+                          </>
+                        ) : (
+                          <span className="text-xs text-gray-400">Changes auto-save</span>
+                        )}
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
               
               <div className="mt-4 md:mt-0">
                 <div className="flex items-center gap-4">
+                  <button
+                    onClick={handleGoBack}
+                    className="flex items-center gap-2 px-4 py-2 text-gray-600 hover:text-gray-900 font-medium hover:bg-gray-100 rounded-lg transition-colors"
+                  >
+                    <ArrowLeft className="w-4 h-4" />
+                    Back
+                  </button>
+                  
                   <div className="flex items-center gap-2">
                     <span className="text-sm font-medium" style={{ color: colorScheme.secondary }}>Progress</span>
                     <div className="w-32 bg-gray-100 rounded-full h-2 overflow-hidden">
                       <div 
                         className="h-full rounded-full transition-all duration-500"
                         style={{ 
-                          width: '33%',
+                          width: '66%',
                           backgroundColor: colorScheme.accent 
                         }}
                       ></div>
                     </div>
-                    <span className="text-sm font-bold" style={{ color: colorScheme.primary }}>33%</span>
+                    <span className="text-sm font-bold" style={{ color: colorScheme.primary }}>66%</span>
                   </div>
                 </div>
               </div>
@@ -396,17 +447,29 @@ export default function BasicProfile() {
                       <span>All information is secure and encrypted</span>
                     </div>
                     
-                    <button
-                      type="submit"
-                      className="px-8 py-3 font-semibold rounded-lg transition-all duration-300 shadow-sm hover:shadow-md flex items-center justify-center gap-2 group"
-                      style={{ 
-                        backgroundColor: colorScheme.accent,
-                        color: 'white'
-                      }}
-                    >
-                      <span>Continue to {role ? role.charAt(0).toUpperCase() + role.slice(1) : 'Next'} Setup</span>
-                      <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
-                    </button>
+                    <div className="flex items-center gap-3">
+  <button
+    type="submit"
+    disabled={isSubmitting}
+    className="px-8 py-3 font-semibold rounded-lg transition-all duration-300 shadow-sm hover:shadow-md flex items-center justify-center gap-2 group disabled:opacity-70 disabled:cursor-not-allowed"
+    style={{ 
+      backgroundColor: colorScheme.accent,
+      color: 'white'
+    }}
+  >
+    {isSubmitting ? (
+      <>
+        <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+        <span>Saving...</span>
+      </>
+    ) : (
+      <>
+        <span>Continue</span>
+        <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
+      </>
+    )}
+  </button>
+</div>
                   </div>
                 </div>
               </form>
@@ -479,47 +542,6 @@ export default function BasicProfile() {
                         <p className="text-sm" style={{ color: colorScheme.primary }}>
                           {form.bio || 'No bio provided yet'}
                         </p>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="p-4 bg-gray-50 rounded-lg border border-gray-100">
-                    <div className="mb-3">
-                      <div className="flex justify-between text-sm mb-1">
-                        <span className="font-medium" style={{ color: colorScheme.secondary }}>
-                          Profile Completion
-                        </span>
-                        <span className="font-bold" style={{ color: colorScheme.accent }}>
-                          {form.name && form.username && form.location ? '33%' : '0%'}
-                        </span>
-                      </div>
-                      <div className="w-full bg-gray-200 rounded-full h-2">
-                        <div className="h-2 rounded-full" 
-                             style={{ 
-                               width: form.name && form.username && form.location ? '33%' : '0%',
-                               backgroundColor: colorScheme.accent 
-                             }}></div>
-                      </div>
-                    </div>
-                    
-                    <div className="space-y-2">
-                      <div className="flex items-center gap-2">
-                        <div className={`w-3 h-3 rounded-full ${form.name && form.username && form.location ? 'bg-green-500' : 'bg-gray-300'}`}></div>
-                        <span className="text-sm" style={{ color: colorScheme.secondary }}>
-                          Basic Info
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <div className="w-3 h-3 rounded-full bg-gray-300"></div>
-                        <span className="text-sm" style={{ color: colorScheme.secondary }}>
-                          {role} Details
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <div className="w-3 h-3 rounded-full bg-gray-300"></div>
-                        <span className="text-sm" style={{ color: colorScheme.secondary }}>
-                          Preferences
-                        </span>
                       </div>
                     </div>
                   </div>

@@ -25,23 +25,32 @@ export default function Dashboard() {
   };
 
   useEffect(() => {
-    // Load profile data
-    const savedProfile = localStorage.getItem('completeProfile');
-    if (savedProfile) {
-      setProfile(JSON.parse(savedProfile));
-    } else {
-      // Check if there's any incomplete setup
-      const profileData = localStorage.getItem('profileData');
-      const selectedRole = localStorage.getItem('selectedRole');
-      
-      if (profileData || selectedRole) {
-        // Redirect to continue setup
-        router.push('/profile-setup');
-      } else {
-        // No profile at all, redirect to role selection
-        router.push('/profile-setup');
-      }
+    const completeProfile = localStorage.getItem('completeProfile');
+    
+    if (completeProfile) {
+      setProfile(JSON.parse(completeProfile));
+      setLoading(false);
+      return;
     }
+    
+    // Check for incomplete setup
+    const profileData = localStorage.getItem('profileData');
+    const selectedRole = localStorage.getItem('selectedRole');
+    
+    if (profileData && selectedRole) {
+      // Has basic profile and role, redirect to role-specific setup
+      router.push(`/profile-setup/${selectedRole}`);
+    } else if (selectedRole && !profileData) {
+      // Has role but no basic profile
+      router.push(`/profile-setup/basic?role=${selectedRole}`);
+    } else if (profileData && !selectedRole) {
+      // Has basic profile but no role (unlikely but handle it)
+      router.push('/profile-setup');
+    } else {
+      // No setup data at all
+      router.push('/profile-setup');
+    }
+    
     setLoading(false);
   }, [router]);
 

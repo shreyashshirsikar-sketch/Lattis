@@ -8,8 +8,11 @@ import {
   Globe, Image as ImageIcon, Rocket,
   ArrowRight, AlertCircle, Users,
   TrendingUp, Briefcase,
-  Loader2
+  Loader2,
+  ArrowLeft,
+  Save
 } from 'lucide-react';
+import { useAutoSave } from '@/app/hooks/useAutoSave';
 
 export default function StartupSetup() {
   const router = useRouter();
@@ -92,20 +95,38 @@ export default function StartupSetup() {
     { id: 'partners', label: 'Find partners', desc: 'Strategic partnerships and collaborations' }
   ];
 
+  // Use auto-save hook
+  const { isSaving, lastSaved, manualSave } = useAutoSave({
+    data: form,
+    storageKey: 'startupPrefs',
+    delay: 1500,
+    onSave: (savedData) => {
+      console.log('Auto-saved startup preferences:', savedData);
+    }
+  });
+
   // Load saved data
   useEffect(() => {
     const savedData = localStorage.getItem('profileData');
-    if (savedData) {
-      const data = JSON.parse(savedData);
-      setProfileData(data);
-      
-      // Load saved startup prefs if exists
-      const startupPrefs = localStorage.getItem('startupPrefs');
-      if (startupPrefs) {
-        setForm(JSON.parse(startupPrefs));
-      }
+    if (!savedData) {
+      router.push('/profile-setup');
+      return;
     }
-  }, []);
+    
+    const data = JSON.parse(savedData);
+    setProfileData(data);
+    
+    // Load saved startup prefs if exists
+    const startupPrefs = localStorage.getItem('startupPrefs');
+    if (startupPrefs) {
+      setForm(JSON.parse(startupPrefs));
+    }
+  }, [router]);
+
+  const handleGoBack = () => {
+    manualSave(); // Save before going back
+    router.push('/profile-setup/basic');
+  };
 
   const handleGoalToggle = (goal: string) => {
     setForm(prev => ({
@@ -124,6 +145,8 @@ export default function StartupSetup() {
         return;
       }
       setForm(prev => ({ ...prev, [field]: file }));
+      // Trigger manual save after file upload
+      manualSave();
     }
   };
 
@@ -174,8 +197,8 @@ export default function StartupSetup() {
 
     setLoading(true);
 
-    // Save startup preferences
-    localStorage.setItem('startupPrefs', JSON.stringify(form));
+    // Final manual save before submission
+    manualSave();
 
     // Combine data
     const savedData = JSON.parse(localStorage.getItem('profileData') || '{}');
@@ -214,7 +237,7 @@ export default function StartupSetup() {
   return (
     <div className="min-h-screen" style={{ backgroundColor: colorScheme.background }}>
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
-        {/* Header Section */}
+        {/* Header Section with Auto-Save Indicator */}
         <div className="mb-12">
           <div className="bg-white border border-gray-200 rounded-xl p-8 shadow-sm">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-8">
@@ -224,36 +247,70 @@ export default function StartupSetup() {
                     <Rocket className="w-6 h-6 text-white" />
                   </div>
                   <div>
-                    <h1 className="text-3xl font-bold tracking-tight text-gray-900">
+                    <h1 className="text-3xl font-bold tracking-tight" style={{ color: colorScheme.primary }}>
                       Startup Profile Setup
                     </h1>
-                    <p className="text-lg text-gray-600">
+                    <p className="text-lg" style={{ color: colorScheme.secondary }}>
                       Tell us about your startup to connect with the ecosystem
                     </p>
+                    
+                    {/* Auto-save status indicator */}
+                    <div className="flex items-center gap-2 mt-2">
+                      <div className="flex items-center gap-1">
+                        {isSaving ? (
+                          <>
+                            <div className="w-3 h-3 border-2 border-green-500 border-t-transparent rounded-full animate-spin"></div>
+                            <span className="text-xs text-green-600">Saving...</span>
+                          </>
+                        ) : lastSaved ? (
+                          <>
+                            <Save className="w-3 h-3 text-green-500" />
+                            <span className="text-xs text-gray-500">
+                              Saved {lastSaved.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                            </span>
+                          </>
+                        ) : (
+                          <span className="text-xs text-gray-400">Changes auto-save</span>
+                        )}
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
 
-              {/* Progress Indicator */}
-              <div className="bg-gray-50 border border-gray-200 rounded-xl p-4">
-                <div className="space-y-2">
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm font-medium text-gray-600">
-                      Setup Progress
-                    </span>
-                    <span className="text-sm font-bold text-green-600">
-                      3/3
-                    </span>
+              {/* Progress Indicator with Back Button */}
+              <div className="flex flex-col items-end gap-4">
+                <button
+                  onClick={handleGoBack}
+                  className="flex items-center gap-2 px-4 py-2 text-gray-600 hover:text-gray-900 font-medium hover:bg-gray-100 rounded-lg transition-colors"
+                >
+                  <ArrowLeft className="w-4 h-4" />
+                  Back to Basic Info
+                </button>
+                
+                <div className="bg-gray-50 border border-gray-200 rounded-xl p-4">
+                  <div className="space-y-2">
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm font-medium" style={{ color: colorScheme.secondary }}>
+                        Setup Progress
+                      </span>
+                      <span className="text-sm font-bold" style={{ color: colorScheme.success }}>
+                        3/3
+                      </span>
+                    </div>
+                    <div className="w-48 bg-gray-200 rounded-full h-2">
+                      <div 
+                        className="h-2 rounded-full transition-all duration-500"
+                        style={{ 
+                          width: '100%',
+                          backgroundColor: colorScheme.success 
+                        }}
+                      ></div>
+                    </div>
+                    <p className="text-xs text-gray-500 pt-2">
+                      Step 3: Startup Details
+                    </p>
                   </div>
-                  <div className="w-48 bg-gray-200 rounded-full h-2">
-                    <div 
-                      className="h-2 rounded-full transition-all duration-500 bg-green-600"
-                      style={{ width: '100%' }}
-                    ></div>
-                  </div>
-                  <p className="text-xs text-gray-500 pt-2">
-                    Step 3: Startup Details
-                  </p>
                 </div>
               </div>
             </div>
@@ -266,11 +323,12 @@ export default function StartupSetup() {
             <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
               <div className="mb-8">
                 <div className="flex items-center gap-3 mb-2">
-                  <div className="w-10 h-10 rounded-lg flex items-center justify-center bg-green-50">
-                    <Building2 className="w-5 h-5 text-green-600" />
+                  <div className="w-10 h-10 rounded-lg flex items-center justify-center"
+                       style={{ backgroundColor: `${colorScheme.success}20` }}>
+                    <Building2 className="w-5 h-5" style={{ color: colorScheme.success }} />
                   </div>
                   <div>
-                    <h2 className="text-xl font-bold text-gray-900">
+                    <h2 className="text-xl font-bold" style={{ color: colorScheme.primary }}>
                       Startup Information
                     </h2>
                     <p className="text-gray-500">Provide details about your venture</p>
@@ -282,7 +340,7 @@ export default function StartupSetup() {
                 {/* Startup Name & Industry */}
                 <div className="grid md:grid-cols-2 gap-6">
                   <div className="space-y-3">
-                    <label className="flex items-center gap-2 font-semibold text-sm text-gray-700">
+                    <label className="flex items-center gap-2 font-semibold text-sm" style={{ color: colorScheme.secondary }}>
                       <Building2 className="w-4 h-4" />
                       Startup Name *
                     </label>
@@ -290,7 +348,8 @@ export default function StartupSetup() {
                       type="text"
                       value={form.startupName}
                       onChange={(e) => setForm(prev => ({ ...prev, startupName: e.target.value }))}
-                      className="w-full px-4 py-3 bg-white border-2 border-gray-300 rounded-lg focus:border-gray-400 focus:outline-none transition-colors text-gray-900"
+                      className="w-full px-4 py-3 bg-white border-2 border-gray-300 rounded-lg focus:border-gray-400 focus:outline-none transition-colors"
+                      style={{ color: colorScheme.primary }}
                       placeholder="Your startup name"
                     />
                     {errors.startupName && (
@@ -302,18 +361,19 @@ export default function StartupSetup() {
                   </div>
 
                   <div className="space-y-3">
-                    <label className="flex items-center gap-2 font-semibold text-sm text-gray-700">
+                    <label className="flex items-center gap-2 font-semibold text-sm" style={{ color: colorScheme.secondary }}>
                       <Briefcase className="w-4 h-4" />
                       Industry *
                     </label>
                     <select
                       value={form.industry}
                       onChange={(e) => setForm(prev => ({ ...prev, industry: e.target.value }))}
-                      className="w-full px-4 py-3 bg-white border-2 border-gray-300 rounded-lg focus:border-gray-400 focus:outline-none transition-colors text-gray-900"
+                      className="w-full px-4 py-3 bg-white border-2 border-gray-300 rounded-lg focus:border-gray-400 focus:outline-none transition-colors"
+                      style={{ color: colorScheme.primary }}
                     >
                       <option value="" className="text-gray-500">Select industry</option>
                       {industries.map(ind => (
-                        <option key={ind.id} value={ind.id} className="text-gray-900">{ind.name}</option>
+                        <option key={ind.id} value={ind.id}>{ind.name}</option>
                       ))}
                     </select>
                     {errors.industry && (
@@ -328,7 +388,7 @@ export default function StartupSetup() {
                 {/* Stage & Team Size */}
                 <div className="grid md:grid-cols-2 gap-6">
                   <div className="space-y-3">
-                    <label className="flex items-center gap-2 font-semibold text-sm text-gray-700">
+                    <label className="flex items-center gap-2 font-semibold text-sm" style={{ color: colorScheme.secondary }}>
                       <Target className="w-4 h-4" />
                       Current Stage *
                     </label>
@@ -349,10 +409,11 @@ export default function StartupSetup() {
                             `}
                           >
                             <div className="space-y-1">
-                              <span className={`font-medium block ${isSelected ? 'text-green-600' : 'text-gray-900'}`}>
+                              <span className={`font-medium block ${isSelected ? 'text-green-600' : ''}`}
+                                    style={isSelected ? {} : { color: colorScheme.primary }}>
                                 {stage.name}
                               </span>
-                              <span className="text-xs text-gray-500 block">
+                              <span className="text-xs block" style={{ color: colorScheme.secondary }}>
                                 {stage.desc}
                               </span>
                             </div>
@@ -371,24 +432,25 @@ export default function StartupSetup() {
                   <div className="space-y-3">
                     <div className="grid grid-cols-2 gap-4">
                       <div className="space-y-3">
-                        <label className="flex items-center gap-2 text-sm font-medium text-gray-700">
+                        <label className="flex items-center gap-2 text-sm font-medium" style={{ color: colorScheme.secondary }}>
                           <Users className="w-4 h-4" />
                           Team Size
                         </label>
                         <select
                           value={form.teamSize}
                           onChange={(e) => setForm(prev => ({ ...prev, teamSize: e.target.value }))}
-                          className="w-full px-4 py-3 bg-white border-2 border-gray-300 rounded-lg focus:border-gray-400 focus:outline-none transition-colors text-gray-900"
+                          className="w-full px-4 py-3 bg-white border-2 border-gray-300 rounded-lg focus:border-gray-400 focus:outline-none transition-colors"
+                          style={{ color: colorScheme.primary }}
                         >
                           <option value="" className="text-gray-500">Team size</option>
                           {teamSizes.map((size) => (
-                            <option key={size} value={size} className="text-gray-900">{size}</option>
+                            <option key={size} value={size}>{size}</option>
                           ))}
                         </select>
                       </div>
 
                       <div className="space-y-3">
-                        <label className="flex items-center gap-2 text-sm font-medium text-gray-700">
+                        <label className="flex items-center gap-2 text-sm font-medium" style={{ color: colorScheme.secondary }}>
                           <Calendar className="w-4 h-4" />
                           Founded
                         </label>
@@ -398,25 +460,27 @@ export default function StartupSetup() {
                           onChange={(e) => setForm(prev => ({ ...prev, foundedYear: e.target.value }))}
                           min="2000"
                           max={new Date().getFullYear()}
-                          className="w-full px-4 py-3 bg-white border-2 border-gray-300 rounded-lg focus:border-gray-400 focus:outline-none transition-colors text-gray-900"
+                          className="w-full px-4 py-3 bg-white border-2 border-gray-300 rounded-lg focus:border-gray-400 focus:outline-none transition-colors"
+                          style={{ color: colorScheme.primary }}
                           placeholder="2024"
                         />
                       </div>
                     </div>
 
                     <div className="space-y-3">
-                      <label className="flex items-center gap-2 text-sm font-medium text-gray-700">
+                      <label className="flex items-center gap-2 text-sm font-medium" style={{ color: colorScheme.secondary }}>
                         <TrendingUp className="w-4 h-4" />
                         Funding Stage
                       </label>
                       <select
                         value={form.fundingStage}
                         onChange={(e) => setForm(prev => ({ ...prev, fundingStage: e.target.value }))}
-                        className="w-full px-4 py-3 bg-white border-2 border-gray-300 rounded-lg focus:border-gray-400 focus:outline-none transition-colors text-gray-900"
+                        className="w-full px-4 py-3 bg-white border-2 border-gray-300 rounded-lg focus:border-gray-400 focus:outline-none transition-colors"
+                        style={{ color: colorScheme.primary }}
                       >
                         <option value="" className="text-gray-500">Select stage</option>
                         {fundingStages.map((stage) => (
-                          <option key={stage} value={stage} className="text-gray-900">{stage}</option>
+                          <option key={stage} value={stage}>{stage}</option>
                         ))}
                       </select>
                     </div>
@@ -425,7 +489,7 @@ export default function StartupSetup() {
 
                 {/* Description */}
                 <div className="space-y-3">
-                  <label className="flex items-center gap-2 font-semibold text-sm text-gray-700">
+                  <label className="flex items-center gap-2 font-semibold text-sm" style={{ color: colorScheme.secondary }}>
                     <Globe className="w-4 h-4" />
                     Product Description *
                     <span className="text-xs font-normal text-gray-400">
@@ -435,12 +499,13 @@ export default function StartupSetup() {
                   <textarea
                     value={form.description}
                     onChange={(e) => setForm(prev => ({ ...prev, description: e.target.value }))}
-                    className="w-full px-4 py-3 bg-white border-2 border-gray-300 rounded-lg focus:border-gray-400 focus:outline-none transition-colors resize-none text-gray-900"
+                    className="w-full px-4 py-3 bg-white border-2 border-gray-300 rounded-lg focus:border-gray-400 focus:outline-none transition-colors resize-none"
+                    style={{ color: colorScheme.primary }}
                     placeholder="Describe what problem you're solving and your solution..."
                     rows={4}
                   />
                   <div className="flex justify-between items-center">
-                    <p className="text-sm text-gray-500">
+                    <p className="text-sm" style={{ color: colorScheme.secondary }}>
                       {form.description.length}/500 characters
                     </p>
                     {errors.description && (
@@ -455,7 +520,7 @@ export default function StartupSetup() {
                 {/* Website & Media Uploads */}
                 <div className="grid md:grid-cols-2 gap-6">
                   <div className="space-y-3">
-                    <label className="flex items-center gap-2 font-semibold text-sm text-gray-700">
+                    <label className="flex items-center gap-2 font-semibold text-sm" style={{ color: colorScheme.secondary }}>
                       <Link className="w-4 h-4" />
                       Website / Demo Link
                     </label>
@@ -467,7 +532,8 @@ export default function StartupSetup() {
                         type="url"
                         value={form.website}
                         onChange={(e) => setForm(prev => ({ ...prev, website: e.target.value }))}
-                        className="w-full pl-12 pr-4 py-3 bg-white border-2 border-gray-300 rounded-lg focus:border-gray-400 focus:outline-none transition-colors text-gray-900"
+                        className="w-full pl-12 pr-4 py-3 bg-white border-2 border-gray-300 rounded-lg focus:border-gray-400 focus:outline-none transition-colors"
+                        style={{ color: colorScheme.primary }}
                         placeholder="https://yourstartup.com"
                       />
                     </div>
@@ -480,7 +546,7 @@ export default function StartupSetup() {
                   </div>
 
                   <div className="space-y-3">
-                    <label className="flex items-center gap-2 font-semibold text-sm text-gray-700">
+                    <label className="flex items-center gap-2 font-semibold text-sm" style={{ color: colorScheme.secondary }}>
                       <ImageIcon className="w-4 h-4" />
                       Media Assets
                     </label>
@@ -502,7 +568,7 @@ export default function StartupSetup() {
                           ) : (
                             <>
                               <Upload className={`w-6 h-6 mb-2 ${form.logo ? 'text-green-500' : 'text-gray-400'}`} />
-                              <p className="text-sm font-medium text-gray-600">Logo</p>
+                              <p className="text-sm font-medium" style={{ color: colorScheme.secondary }}>Logo</p>
                             </>
                           )}
                         </div>
@@ -531,7 +597,7 @@ export default function StartupSetup() {
                           ) : (
                             <>
                               <Upload className={`w-6 h-6 mb-2 ${form.banner ? 'text-green-500' : 'text-gray-400'}`} />
-                              <p className="text-sm font-medium text-gray-600">Banner</p>
+                              <p className="text-sm font-medium" style={{ color: colorScheme.secondary }}>Banner</p>
                             </>
                           )}
                         </div>
@@ -548,7 +614,7 @@ export default function StartupSetup() {
 
                 {/* Goals Section */}
                 <div className="space-y-3">
-                  <label className="flex items-center gap-2 font-semibold text-sm text-gray-700">
+                  <label className="flex items-center gap-2 font-semibold text-sm" style={{ color: colorScheme.secondary }}>
                     <Target className="w-4 h-4" />
                     Your Startup Goals
                     <span className="text-xs font-normal text-gray-400">
@@ -574,10 +640,10 @@ export default function StartupSetup() {
                         >
                           <div className="flex items-start justify-between">
                             <div className="space-y-1">
-                              <span className="font-medium text-gray-900 block">
+                              <span className="font-medium block" style={{ color: colorScheme.primary }}>
                                 {goal.label}
                               </span>
-                              <span className="text-xs text-gray-500 block">
+                              <span className="text-xs block" style={{ color: colorScheme.secondary }}>
                                 {goal.desc}
                               </span>
                             </div>
@@ -594,28 +660,35 @@ export default function StartupSetup() {
                 {/* Form Actions */}
                 <div className="pt-6 border-t border-gray-100">
                   <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-                    <div className="flex items-center gap-2 text-sm text-gray-600">
+                    <div className="flex items-center gap-2 text-sm" style={{ color: colorScheme.secondary }}>
                       <Check className="w-4 h-4 text-green-500" />
                       <span>Your startup will be visible to investors and partners</span>
                     </div>
                     
-                    <button
-                      type="submit"
-                      disabled={loading}
-                      className="px-8 py-3 font-semibold rounded-lg transition-all duration-300 shadow-sm hover:shadow-md flex items-center justify-center gap-2 group min-w-[200px] bg-green-600 text-white hover:bg-green-700"
-                    >
-                      {loading ? (
-                        <>
-                          <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                          <span>Launching your startup...</span>
-                        </>
-                      ) : (
-                        <>
-                          <span>Complete Startup Profile</span>
-                          <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
-                        </>
-                      )}
-                    </button>
+                    <div className="flex items-center gap-3">
+                      
+                      <button
+                        type="submit"
+                        disabled={loading}
+                        className="px-8 py-3 font-semibold rounded-lg transition-all duration-300 shadow-sm hover:shadow-md flex items-center justify-center gap-2 group min-w-[200px]"
+                        style={{ 
+                          backgroundColor: colorScheme.success,
+                          color: 'white'
+                        }}
+                      >
+                        {loading ? (
+                          <>
+                            <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                            <span>Launching your startup...</span>
+                          </>
+                        ) : (
+                          <>
+                            <span>Complete Startup Profile</span>
+                            <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
+                          </>
+                        )}
+                      </button>
+                    </div>
                   </div>
                 </div>
               </form>
@@ -627,27 +700,32 @@ export default function StartupSetup() {
             <div className="sticky top-8 space-y-6">
               <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
                 <div className="mb-6">
-                  <h3 className="text-lg font-bold text-gray-900 mb-2">
+                  <h3 className="text-lg font-bold" style={{ color: colorScheme.primary }}>
                     Startup Preview
                   </h3>
                   <p className="text-sm text-gray-500">How investors will see your startup</p>
                 </div>
 
                 <div className="space-y-4">
-                  <div className="p-4 bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg border border-green-100">
+                  <div className="p-4 rounded-lg border"
+                       style={{ 
+                         background: 'linear-gradient(to right, rgba(187, 247, 208, 0.5), rgba(167, 243, 208, 0.5))',
+                         borderColor: 'rgba(134, 239, 172, 0.5)'
+                       }}>
                     <div className="flex items-center gap-3 mb-3">
-                      <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+                      <div className="w-12 h-12 rounded-lg flex items-center justify-center"
+                           style={{ backgroundColor: `${colorScheme.success}20` }}>
                         {form.logo ? (
-                          <div className="text-sm font-bold text-green-700">LOGO</div>
+                          <div className="text-sm font-bold" style={{ color: colorScheme.success }}>LOGO</div>
                         ) : (
-                          <Building2 className="w-6 h-6 text-green-600" />
+                          <Building2 className="w-6 h-6" style={{ color: colorScheme.success }} />
                         )}
                       </div>
                       <div>
-                        <h4 className="font-bold text-lg text-gray-900">
+                        <h4 className="font-bold text-lg" style={{ color: colorScheme.primary }}>
                           {form.startupName || 'Your Startup'}
                         </h4>
-                        <p className="text-sm text-gray-600">
+                        <p className="text-sm" style={{ color: colorScheme.secondary }}>
                           {industries.find(i => i.id === form.industry)?.name || 'Industry'}
                         </p>
                       </div>
@@ -657,25 +735,25 @@ export default function StartupSetup() {
                   <div className="grid grid-cols-2 gap-3">
                     <div className="p-3 bg-gray-50 rounded-lg border border-gray-100">
                       <p className="text-xs text-gray-400 mb-1">Stage</p>
-                      <p className="font-medium text-gray-900">
+                      <p className="font-medium" style={{ color: colorScheme.primary }}>
                         {stages.find(s => s.id === form.stage)?.name || 'Not set'}
                       </p>
                     </div>
                     <div className="p-3 bg-gray-50 rounded-lg border border-gray-100">
                       <p className="text-xs text-gray-400 mb-1">Founded</p>
-                      <p className="font-medium text-gray-900">
+                      <p className="font-medium" style={{ color: colorScheme.primary }}>
                         {form.foundedYear || 'Not set'}
                       </p>
                     </div>
                     <div className="p-3 bg-gray-50 rounded-lg border border-gray-100">
                       <p className="text-xs text-gray-400 mb-1">Team Size</p>
-                      <p className="font-medium text-gray-900">
+                      <p className="font-medium" style={{ color: colorScheme.primary }}>
                         {form.teamSize || 'Not set'}
                       </p>
                     </div>
                     <div className="p-3 bg-gray-50 rounded-lg border border-gray-100">
                       <p className="text-xs text-gray-400 mb-1">Funding</p>
-                      <p className="font-medium text-gray-900">
+                      <p className="font-medium" style={{ color: colorScheme.primary }}>
                         {form.fundingStage || 'Not set'}
                       </p>
                     </div>
@@ -689,12 +767,12 @@ export default function StartupSetup() {
                     <div className="space-y-2">
                       {form.goals.slice(0, 3).map((goal) => (
                         <div key={goal} className="flex items-center gap-2">
-                          <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                          <span className="text-sm text-gray-700">{goal}</span>
+                          <div className="w-2 h-2 rounded-full" style={{ backgroundColor: colorScheme.success }}></div>
+                          <span className="text-sm" style={{ color: colorScheme.primary }}>{goal}</span>
                         </div>
                       ))}
                       {form.goals.length > 3 && (
-                        <div className="text-xs text-gray-500">
+                        <div className="text-xs" style={{ color: colorScheme.secondary }}>
                           +{form.goals.length - 3} more goals
                         </div>
                       )}
@@ -703,16 +781,21 @@ export default function StartupSetup() {
                 </div>
               </div>
 
-              <div className="p-5 rounded-xl border border-green-100 bg-green-50/50">
+              <div className="p-5 rounded-xl border"
+                   style={{ 
+                     borderColor: `${colorScheme.success}30`,
+                     backgroundColor: `${colorScheme.success}10`
+                   }}>
                 <div className="flex items-start gap-3">
-                  <div className="w-6 h-6 rounded flex items-center justify-center bg-green-600">
+                  <div className="w-6 h-6 rounded flex items-center justify-center"
+                       style={{ backgroundColor: colorScheme.success }}>
                     <Rocket className="w-3 h-3 text-white" />
                   </div>
                   <div>
-                    <h4 className="font-semibold text-sm text-gray-900 mb-2">
+                    <h4 className="font-semibold text-sm mb-2" style={{ color: colorScheme.primary }}>
                       Why Complete Your Profile?
                     </h4>
-                    <ul className="space-y-2 text-sm text-gray-700">
+                    <ul className="space-y-2 text-sm" style={{ color: colorScheme.secondary }}>
                       <li className="flex items-center gap-2">
                         <Check className="w-3 h-3 text-green-500" />
                         <span>Visibility to investors and partners</span>
