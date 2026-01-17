@@ -272,7 +272,7 @@ export default function Home() {
                 href="/signup"
                 className="px-8 py-3.5 bg-gradient-to-r from-[#7373D7] to-[#6363C7] text-white rounded-lg hover:opacity-95 font-medium text-base transition-opacity"
               >
-                Join the waitlist →
+                Start exploring →
               </Link>
               <button 
                 onClick={() => scrollToSection('how-it-works')}
@@ -335,45 +335,45 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Who it's for */}
-        <section className="py-20 bg-gray-50">
-          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-16">
-              <h2 className="text-3xl font-bold text-gray-900 mb-4">
-                Built for every stage of innovation
-              </h2>
-              <p className="text-gray-600 max-w-2xl mx-auto">
-               Different roles, shared mission. We’re building specific tools for each part of the early-stage ecosystem.
-              </p>
+{/* Who it's for */}
+<section className="py-20 bg-gray-50">
+  <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="text-center mb-16">
+      <h2 className="text-3xl font-bold text-gray-900 mb-4">
+        Built for every stage of innovation
+      </h2>
+      <p className="text-gray-600 max-w-2xl mx-auto">
+        Different roles, shared mission. We're building specific tools for each part of the early-stage ecosystem.
+      </p>
+    </div>
+  
+    <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+      {roles.map((role, index) => {
+        const Icon = role.icon;
+        return (
+          <div
+            key={index}
+            className="bg-white rounded-2xl p-8 border border-gray-100 hover:border-[#7373D7]/30 transition-all duration-300 hover:shadow-lg"
+          >
+            <div className="w-14 h-14 bg-gradient-to-br from-[#7373D7] to-[#6363C7] rounded-xl flex items-center justify-center mb-8">
+              <Icon className="w-7 h-7 text-white" />
             </div>
-            
-            <div className="grid md:grid-cols-3 gap-8">
-              {roles.map((role, index) => {
-                const Icon = role.icon;
-                return (
-                  <div
-                    key={index}
-                    className="bg-white rounded-2xl p-8 border border-gray-100 hover:border-[#7373D7]/30 transition-all duration-300 hover:shadow-lg"
-                  >
-                    <div className="w-14 h-14 bg-gradient-to-br from-[#7373D7] to-[#6363C7] rounded-xl flex items-center justify-center mb-8">
-                      <Icon className="w-7 h-7 text-white" />
-                    </div>
-                    <h3 className="text-xl font-semibold text-gray-900 mb-4">{role.title}</h3>
-                    <p className="text-gray-600 mb-6 text-sm leading-relaxed">{role.description}</p>
-                    <ul className="space-y-3">
-                      {role.points.map((point, i) => (
-                        <li key={i} className="flex items-center gap-3 text-gray-700">
-                          <Check className="w-4 h-4 text-[#7373D7]" />
-                          <span className="text-sm">{point}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                );
-              })}
-            </div>
+            <h3 className="text-xl font-semibold text-gray-900 mb-4">{role.title}</h3>
+            <p className="text-gray-600 mb-6 text-sm leading-relaxed">{role.description}</p>
+            <ul className="space-y-3">
+              {role.points.map((point, i) => (
+                <li key={i} className="flex items-center gap-3 text-gray-700">
+                  <Check className="w-4 h-4 text-[#7373D7]" />
+                  <span className="text-sm">{point}</span>
+                </li>
+              ))}
+            </ul>
           </div>
-        </section>
+        );
+      })}
+    </div>
+  </div>
+</section>
 
         {/* How it works */}
 <section id="how-it-works" className="py-20 bg-white">
@@ -673,7 +673,7 @@ export default function Home() {
         </section>
 
          {/* For Incubators Section */}
-        <section id="for-students" className="py-20 bg-gray-50">
+        <section id="for-incubators" className="py-20 bg-gray-50">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16">
               <h2 className="text-3xl font-bold text-gray-900 mb-4">
@@ -936,7 +936,7 @@ export default function Home() {
                 href="/signup"
                 className="bg-white text-[#7373D7] px-8 py-3.5 rounded-lg hover:bg-gray-50 font-semibold text-base transition-colors"
               >
-                Join the waitlist
+                Start exploring 
               </Link>
               <Link
                 href="/demo"
@@ -979,7 +979,7 @@ export default function Home() {
                   <li><button onClick={() => scrollToSection('for-students')} className="text-gray-400 hover:text-white text-sm transition-colors text-left">For Professionals </button></li>
                   <li><button onClick={() => scrollToSection('for-startups')} className="text-gray-400 hover:text-white text-sm transition-colors text-left">For Startups</button></li>
                   <li><button onClick={() => scrollToSection('for-investors')} className="text-gray-400 hover:text-white text-sm transition-colors text-left">For Investors</button></li>
-                  <li><button onClick={() => scrollToSection('for-investors')} className="text-gray-400 hover:text-white text-sm transition-colors text-left">For Incubators</button></li>
+                  <li><button onClick={() => scrollToSection('for-incubators')} className="text-gray-400 hover:text-white text-sm transition-colors text-left">For Incubators</button></li>
                 </ul>
               </div>
 
