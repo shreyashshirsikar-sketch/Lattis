@@ -32,13 +32,36 @@ export default function LoginPage() {
     e.preventDefault();
     setIsLoading(true);
     
-    // Simulate login process
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    console.log('Login attempt:', { email, password, rememberMe });
-    
-    setIsLoading(false);
-    router.push('/dashboard');
+    try {
+      // Simulate login process
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      console.log('Login attempt:', { email, password, rememberMe });
+      
+      // Save basic user authentication flag
+      localStorage.setItem('isAuthenticated', 'true');
+      
+      // Clear any previous incomplete setup data
+      localStorage.removeItem('selectedRole');
+      localStorage.removeItem('profileData');
+      localStorage.removeItem('professionalPrefs');
+      localStorage.removeItem('startupPrefs');
+      
+      // Set user data (simulated - replace with actual API response)
+      const userData = {
+        email,
+        isAuthenticated: true,
+        loginTime: new Date().toISOString()
+      };
+      localStorage.setItem('userData', JSON.stringify(userData));
+      
+      setIsLoading(false);
+      router.push('/dashboard');
+    } catch (error) {
+      console.error('Login error:', error);
+      alert('Login failed. Please try again.');
+      setIsLoading(false);
+    }
   };
 
   const benefits = [
@@ -274,6 +297,15 @@ export default function LoginPage() {
                   <div className="mt-6 flex flex-col gap-3">
                     <button
                       type="button"
+                      onClick={() => {
+                        // Handle Google login
+                        localStorage.setItem('isAuthenticated', 'true');
+                        localStorage.removeItem('selectedRole');
+                        localStorage.removeItem('profileData');
+                        localStorage.removeItem('professionalPrefs');
+                        localStorage.removeItem('startupPrefs');
+                        router.push('/dashboard');
+                      }}
                       className="w-full flex items-center justify-center gap-3 py-2.5 px-4 border border-gray-300 rounded-lg hover:border-gray-400 transition-colors bg-white"
                     >
                       <svg className="w-4 h-4" viewBox="0 0 24 24">
@@ -299,6 +331,15 @@ export default function LoginPage() {
                     
                     <button
                       type="button"
+                      onClick={() => {
+                        // Handle LinkedIn login
+                        localStorage.setItem('isAuthenticated', 'true');
+                        localStorage.removeItem('selectedRole');
+                        localStorage.removeItem('profileData');
+                        localStorage.removeItem('professionalPrefs');
+                        localStorage.removeItem('startupPrefs');
+                        router.push('/dashboard');
+                      }}
                       className="w-full flex items-center justify-center gap-3 py-2.5 px-4 border border-gray-300 rounded-lg hover:border-gray-400 transition-colors bg-white"
                     >
                       <svg className="w-4 h-4" fill="#0077B5" viewBox="0 0 24 24">

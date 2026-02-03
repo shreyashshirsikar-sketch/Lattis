@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { User, Rocket, Check, ArrowRight, Sparkles } from 'lucide-react';
 
@@ -8,6 +8,20 @@ export default function RoleSelection() {
   const router = useRouter();
   const [selectedRole, setSelectedRole] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [checkingAuth, setCheckingAuth] = useState(true);
+
+  useEffect(() => {
+    // Check if user is authenticated
+    const isAuthenticated = localStorage.getItem('isAuthenticated');
+    const userData = localStorage.getItem('userData');
+    
+    if (!isAuthenticated || !userData) {
+      // If not authenticated, redirect to login
+      router.push('/login');
+    } else {
+      setCheckingAuth(false);
+    }
+  }, [router]);
 
   const colorScheme = {
     primary: '#0F0F0F',
@@ -56,6 +70,18 @@ export default function RoleSelection() {
   };
 
   const selectedRoleData = roles.find(role => role.id === selectedRole);
+
+  // Show loading state while checking authentication
+  if (checkingAuth) {
+    return (
+      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: colorScheme.background }}>
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-blue-100 border-t-blue-600 rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-gray-600">Checking authentication...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: colorScheme.background }}>

@@ -65,6 +65,15 @@ export default function SignupPage() {
       // Save to localStorage (temporary until backend is connected)
       localStorage.setItem('userData', JSON.stringify(userData));
       
+      // Save basic user authentication flag
+      localStorage.setItem('isAuthenticated', 'true');
+      
+      // Clear any previous incomplete setup data
+      localStorage.removeItem('selectedRole');
+      localStorage.removeItem('profileData');
+      localStorage.removeItem('professionalPrefs');
+      localStorage.removeItem('startupPrefs');
+      
       // Simulate API call delay
       await new Promise(resolve => setTimeout(resolve, 1000));
       
@@ -401,6 +410,16 @@ Create your Lattis account to connect with startups, professionals, investors, a
                       onClick={() => {
                         // Handle Google signup
                         console.log('Google signup');
+                        
+                        // Save basic user authentication flag
+                        localStorage.setItem('isAuthenticated', 'true');
+                        
+                        // Clear any previous incomplete setup data
+                        localStorage.removeItem('selectedRole');
+                        localStorage.removeItem('profileData');
+                        localStorage.removeItem('professionalPrefs');
+                        localStorage.removeItem('startupPrefs');
+                        
                         // Save temporary user data
                         localStorage.setItem('userData', JSON.stringify({
                           email: 'google-user@example.com',
@@ -437,6 +456,16 @@ Create your Lattis account to connect with startups, professionals, investors, a
                       onClick={() => {
                         // Handle LinkedIn signup
                         console.log('LinkedIn signup');
+                        
+                        // Save basic user authentication flag
+                        localStorage.setItem('isAuthenticated', 'true');
+                        
+                        // Clear any previous incomplete setup data
+                        localStorage.removeItem('selectedRole');
+                        localStorage.removeItem('profileData');
+                        localStorage.removeItem('professionalPrefs');
+                        localStorage.removeItem('startupPrefs');
+                        
                         // Save temporary user data
                         localStorage.setItem('userData', JSON.stringify({
                           email: 'linkedin-user@example.com',

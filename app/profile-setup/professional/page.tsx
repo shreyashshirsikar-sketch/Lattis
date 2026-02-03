@@ -87,24 +87,36 @@ export default function ProfessionalSetup() {
 
   // Load saved data
   useEffect(() => {
-    const savedData = localStorage.getItem('profileData');
-    if (!savedData) {
+  const isAuthenticated = localStorage.getItem('isAuthenticated');
+  if (!isAuthenticated) {
+    router.push('/login');
+    return;
+  }
+
+  const savedData = localStorage.getItem('profileData');
+  if (!savedData) {
+    // No basic profile data, go to basic setup
+    const selectedRole = localStorage.getItem('selectedRole');
+    if (selectedRole) {
+      router.push(`/profile-setup/basic?role=${selectedRole}`);
+    } else {
       router.push('/profile-setup');
-      return;
     }
-    
-    const data = JSON.parse(savedData);
-    setProfileData(data);
-    if (data.location) setForm(prev => ({ ...prev, location: data.location }));
-    
-    // Load saved professional prefs if exists
-    const proPrefs = localStorage.getItem('professionalPrefs');
-    if (proPrefs) {
-      const prefs = JSON.parse(proPrefs);
-      setForm(prefs.form);
-      setSkills(prefs.skills || []);
-    }
-  }, [router]);
+    return;
+  }
+  
+  const data = JSON.parse(savedData);
+  setProfileData(data);
+  if (data.location) setForm(prev => ({ ...prev, location: data.location }));
+  
+  // Load saved professional prefs if exists
+  const proPrefs = localStorage.getItem('professionalPrefs');
+  if (proPrefs) {
+    const prefs = JSON.parse(proPrefs);
+    setForm(prefs.form);
+    setSkills(prefs.skills || []);
+  }
+}, [router]);
 
   const handleGoBack = () => {
     manualSave(); // Save before going back

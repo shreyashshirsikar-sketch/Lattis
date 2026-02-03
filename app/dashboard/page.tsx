@@ -25,38 +25,56 @@ export default function Dashboard() {
   };
 
   useEffect(() => {
-    const completeProfile = localStorage.getItem('completeProfile');
-    
-    if (completeProfile) {
-      setProfile(JSON.parse(completeProfile));
-      setLoading(false);
-      return;
-    }
-    
-    // Check for incomplete setup
-    const profileData = localStorage.getItem('profileData');
-    const selectedRole = localStorage.getItem('selectedRole');
-    
-    if (profileData && selectedRole) {
-      // Has basic profile and role, redirect to role-specific setup
-      router.push(`/profile-setup/${selectedRole}`);
-    } else if (selectedRole && !profileData) {
-      // Has role but no basic profile
-      router.push(`/profile-setup/basic?role=${selectedRole}`);
-    } else if (profileData && !selectedRole) {
-      // Has basic profile but no role (unlikely but handle it)
-      router.push('/profile-setup');
-    } else {
-      // No setup data at all
-      router.push('/profile-setup');
-    }
-    
+  // Check if user has completed profile setup
+  const completeProfile = localStorage.getItem('completeProfile');
+  
+  if (completeProfile) {
+    setProfile(JSON.parse(completeProfile));
     setLoading(false);
-  }, [router]);
+    return;
+  }
+  
+  // Check if user is logged in
+  const userData = localStorage.getItem('userData');
+  
+  if (!userData) {
+    // No user data at all, redirect to home
+    router.push('/');
+    return;
+  }
+  
+  // User is logged in but hasn't completed profile
+  const selectedRole = localStorage.getItem('selectedRole');
+  const profileData = localStorage.getItem('profileData');
+  
+  if (selectedRole && !profileData) {
+    // Has role but no basic profile
+    router.push(`/profile-setup/basic?role=${selectedRole}`);
+  } else if (profileData && !selectedRole) {
+    // Has basic profile but no role
+    router.push('/profile-setup');
+  } else if (!selectedRole && !profileData) {
+    // No setup started
+    router.push('/profile-setup');
+  } else {
+    // Has both role and basic profile, redirect to role-specific setup
+    router.push(`/profile-setup/${selectedRole}`);
+  }
+  
+  setLoading(false);
+}, [router]);
 
   const handleLogout = () => {
-    // Clear all localStorage
-    localStorage.clear();
+    // Clear all user data
+    localStorage.removeItem('isAuthenticated');
+    localStorage.removeItem('userData');
+    localStorage.removeItem('completeProfile');
+    localStorage.removeItem('selectedRole');
+    localStorage.removeItem('profileData');
+    localStorage.removeItem('professionalPrefs');
+    localStorage.removeItem('startupPrefs');
+    
+    // Redirect to home page
     router.push('/');
   };
 
