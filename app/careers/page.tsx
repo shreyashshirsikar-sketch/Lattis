@@ -213,16 +213,16 @@ export default function CareersPage() {
 
             <nav className="hidden md:flex items-center space-x-8">
               <button
-                onClick={() => scrollToSection('positions')}
-                className="text-sm text-gray-600 hover:text-[#7373D7] transition-colors cursor-pointer"
-              >
-                Open Positions
-              </button>
-              <button
                 onClick={() => scrollToSection('benefits')}
                 className="text-sm text-gray-600 hover:text-[#7373D7] transition-colors cursor-pointer"
               >
                 Benefits
+              </button>
+              <button
+                onClick={() => scrollToSection('positions')}
+                className="text-sm text-gray-600 hover:text-[#7373D7] transition-colors cursor-pointer"
+              >
+                Open Positions
               </button>
               <button
                 onClick={() => scrollToSection('process')}
@@ -234,7 +234,7 @@ export default function CareersPage() {
                 onClick={() => scrollToSection('team')}
                 className="text-sm text-gray-600 hover:text-[#7373D7] transition-colors cursor-pointer"
               >
-                Meet Our Team
+                Our Team
               </button>
             </nav>
 
@@ -261,16 +261,16 @@ export default function CareersPage() {
             <div className="md:hidden border-t border-gray-100 py-4">
               <div className="space-y-3">
                 <button
-                  onClick={() => scrollToSection('positions')}
-                  className="block w-full text-left py-2 text-gray-600 hover:text-[#7373D7]"
-                >
-                  Open Positions
-                </button>
-                <button
                   onClick={() => scrollToSection('benefits')}
                   className="block w-full text-left py-2 text-gray-600 hover:text-[#7373D7]"
                 >
                   Benefits
+                </button>
+                <button
+                  onClick={() => scrollToSection('positions')}
+                  className="block w-full text-left py-2 text-gray-600 hover:text-[#7373D7]"
+                >
+                  Open Positions
                 </button>
                 <button
                   onClick={() => scrollToSection('process')}
@@ -282,7 +282,7 @@ export default function CareersPage() {
                   onClick={() => scrollToSection('team')}
                   className="block w-full text-left py-2 text-gray-600 hover:text-[#7373D7]"
                 >
-                  Meet Our Team
+                  Our Team
                 </button>
                 <div className="pt-4 space-y-3 border-t border-gray-100">
                   <Link
@@ -318,24 +318,72 @@ export default function CareersPage() {
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <button 
-                onClick={() => scrollToSection('positions')}
+                onClick={() => scrollToSection('why-join')}
                 className="px-8 py-3.5 bg-gradient-to-r from-[#7373D7] to-[#6363C7] text-white rounded-lg hover:opacity-95 font-medium text-base transition-opacity"
               >
-                View Open Positions →
+                Why Join Lattis →
               </button>
               <button
-                onClick={() => scrollToSection('team')}
+                onClick={() => scrollToSection('positions')}
                 className="px-8 py-3.5 border border-gray-300 text-gray-700 rounded-lg hover:border-gray-400 font-medium text-base flex items-center justify-center gap-3 transition-colors"
               >
                 <Users className="w-4 h-4" />
-                Meet Our Team
+                View Open Positions
               </button>
             </div>
           </div>
         </section>
 
+        {/* Why Join Now */}
+        <section id="why-join" className="py-20 bg-white">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="bg-gradient-to-r from-[#7373D7]/5 to-[#6363C7]/5 rounded-2xl p-8 md:p-12 border border-[#7373D7]/20">
+              <div className="text-center mb-12">
+                <h2 className="text-3xl font-bold text-gray-900 mb-4">
+                  Why Join Lattis Now?
+                </h2>
+                <p className="text-gray-600 max-w-2xl mx-auto">
+                  This is a unique opportunity to shape a product from the ground up.
+                </p>
+              </div>
+              
+              <div className="grid md:grid-cols-3 gap-8">
+                <div className="text-center">
+                  <div className="w-16 h-16 bg-[#7373D7]/10 rounded-xl flex items-center justify-center mb-6 mx-auto">
+                    <Target className="w-8 h-8 text-[#7373D7]" />
+                  </div>
+                  <h3 className="text-xl font-semibold text-gray-900 mb-4">Founding Team Impact</h3>
+                  <p className="text-gray-600 text-sm">
+                    Work directly with all founders and shape company culture from day one. Your input will directly influence product direction.
+                  </p>
+                </div>
+                
+                <div className="text-center">
+                  <div className="w-16 h-16 bg-[#7373D7]/10 rounded-xl flex items-center justify-center mb-6 mx-auto">
+                    <Zap className="w-8 h-8 text-[#7373D7]" />
+                  </div>
+                  <h3 className="text-xl font-semibold text-gray-900 mb-4">Accelerated Growth</h3>
+                  <p className="text-gray-600 text-sm">
+                    Learn faster than anywhere else. You'll own meaningful features, work across the stack, and develop skills that typically take years.
+                  </p>
+                </div>
+                
+                <div className="text-center">
+                  <div className="w-16 h-16 bg-[#7373D7]/10 rounded-xl flex items-center justify-center mb-6 mx-auto">
+                    <TrendingUp className="w-8 h-8 text-[#7373D7]" />
+                  </div>
+                  <h3 className="text-xl font-semibold text-gray-900 mb-4">Real User Impact</h3>
+                  <p className="text-gray-600 text-sm">
+                    See your work directly help students launch careers and startups find talent. Every feature you build solves real problems for real people.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* Mission Section */}
-        <section className="py-20 bg-white">
+        <section id="mission" className="py-20 bg-gray-50">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <h2 className="text-3xl font-bold text-gray-900 mb-6">
               Our Mission
@@ -352,7 +400,7 @@ export default function CareersPage() {
         </section>
 
         {/* Values Section */}
-        <section className="py-20 bg-gray-50">
+        <section id="values" className="py-20 bg-white">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16">
               <h2 className="text-3xl font-bold text-gray-900 mb-4">
@@ -379,44 +427,6 @@ export default function CareersPage() {
                   </div>
                 );
               })}
-            </div>
-          </div>
-        </section>
-
-        {/* Meet Our Team */}
-        <section id="team" className="py-20 bg-white">
-          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-16">
-              <h2 className="text-3xl font-bold text-gray-900 mb-4">
-                Meet Our Founding Team
-              </h2>
-              <p className="text-gray-600 max-w-2xl mx-auto">
-                Join a small, passionate team creating meaningful impact in the startup ecosystem.
-              </p>
-            </div>
-            
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-              {teamMembers.map((member, index) => (
-                <div
-                  key={index}
-                  className="bg-white rounded-xl p-6 border border-gray-100 hover:border-[#7373D7]/30 transition-all duration-300"
-                >
-                  <div className="w-16 h-16 bg-gradient-to-br from-[#7373D7] to-[#6363C7] rounded-full flex items-center justify-center mb-4 mx-auto">
-                    <span className="text-white font-semibold text-lg">
-                      {member.name.split(' ').map(n => n[0]).join('')}
-                    </span>
-                  </div>
-                  <h3 className="text-lg font-bold text-gray-900 text-center mb-2">{member.name}</h3>
-                  <div className="text-sm text-[#7373D7] font-medium text-center mb-3">{member.role}</div>
-                  <p className="text-gray-600 text-sm text-center">{member.focus}</p>
-                </div>
-              ))}
-            </div>
-            
-            <div className="mt-12 text-center">
-              <p className="text-gray-600 mb-6">
-                You'll work directly with all founders, contributing to both strategy and execution.
-              </p>
             </div>
           </div>
         </section>
@@ -597,50 +607,40 @@ export default function CareersPage() {
           </div>
         </section>
 
-        {/* Why Join Now */}
-        <section className="py-20 bg-white">
+        {/* Meet Our Team */}
+        <section id="team" className="py-20 bg-white">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="bg-gradient-to-r from-[#7373D7]/5 to-[#6363C7]/5 rounded-2xl p-8 md:p-12 border border-[#7373D7]/20">
-              <div className="text-center mb-12">
-                <h2 className="text-3xl font-bold text-gray-900 mb-4">
-                  Why Join Lattis Now?
-                </h2>
-                <p className="text-gray-600 max-w-2xl mx-auto">
-                  This is a unique opportunity to shape a product from the ground up.
-                </p>
-              </div>
-              
-              <div className="grid md:grid-cols-3 gap-8">
-                <div className="text-center">
-                  <div className="w-16 h-16 bg-[#7373D7]/10 rounded-xl flex items-center justify-center mb-6 mx-auto">
-                    <Target className="w-8 h-8 text-[#7373D7]" />
+            <div className="text-center mb-16">
+              <h2 className="text-3xl font-bold text-gray-900 mb-4">
+                Meet Our Founding Team
+              </h2>
+              <p className="text-gray-600 max-w-2xl mx-auto">
+                Join a small, passionate team creating meaningful impact in the startup ecosystem.
+              </p>
+            </div>
+            
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+              {teamMembers.map((member, index) => (
+                <div
+                  key={index}
+                  className="bg-white rounded-xl p-6 border border-gray-100 hover:border-[#7373D7]/30 transition-all duration-300"
+                >
+                  <div className="w-16 h-16 bg-gradient-to-br from-[#7373D7] to-[#6363C7] rounded-full flex items-center justify-center mb-4 mx-auto">
+                    <span className="text-white font-semibold text-lg">
+                      {member.name.split(' ').map(n => n[0]).join('')}
+                    </span>
                   </div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-4">Founding Team Impact</h3>
-                  <p className="text-gray-600 text-sm">
-                    Work directly with all founders and shape company culture from day one. Your input will directly influence product direction.
-                  </p>
+                  <h3 className="text-lg font-bold text-gray-900 text-center mb-2">{member.name}</h3>
+                  <div className="text-sm text-[#7373D7] font-medium text-center mb-3">{member.role}</div>
+                  <p className="text-gray-600 text-sm text-center">{member.focus}</p>
                 </div>
-                
-                <div className="text-center">
-                  <div className="w-16 h-16 bg-[#7373D7]/10 rounded-xl flex items-center justify-center mb-6 mx-auto">
-                    <Zap className="w-8 h-8 text-[#7373D7]" />
-                  </div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-4">Accelerated Growth</h3>
-                  <p className="text-gray-600 text-sm">
-                    Learn faster than anywhere else. You'll own meaningful features, work across the stack, and develop skills that typically take years.
-                  </p>
-                </div>
-                
-                <div className="text-center">
-                  <div className="w-16 h-16 bg-[#7373D7]/10 rounded-xl flex items-center justify-center mb-6 mx-auto">
-                    <TrendingUp className="w-8 h-8 text-[#7373D7]" />
-                  </div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-4">Real User Impact</h3>
-                  <p className="text-gray-600 text-sm">
-                    See your work directly help students launch careers and startups find talent. Every feature you build solves real problems for real people.
-                  </p>
-                </div>
-              </div>
+              ))}
+            </div>
+            
+            <div className="mt-12 text-center">
+              <p className="text-gray-600 mb-6">
+                You'll work directly with all founders, contributing to both strategy and execution.
+              </p>
             </div>
           </div>
         </section>
@@ -759,8 +759,8 @@ export default function CareersPage() {
               <div>
                 <h4 className="font-semibold text-gray-200 mb-6">Careers</h4>
                 <ul className="space-y-3">
-                  <li><button onClick={() => scrollToSection('positions')} className="text-gray-400 hover:text-white text-sm transition-colors text-left">Open Positions</button></li>
                   <li><button onClick={() => scrollToSection('benefits')} className="text-gray-400 hover:text-white text-sm transition-colors text-left">Benefits</button></li>
+                  <li><button onClick={() => scrollToSection('positions')} className="text-gray-400 hover:text-white text-sm transition-colors text-left">Open Positions</button></li>
                   <li><button onClick={() => scrollToSection('process')} className="text-gray-400 hover:text-white text-sm transition-colors text-left">Hiring Process</button></li>
                   <li><button onClick={() => scrollToSection('team')} className="text-gray-400 hover:text-white text-sm transition-colors text-left">Our Team</button></li>
                 </ul>
