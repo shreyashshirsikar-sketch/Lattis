@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { User, Rocket, TrendingUp, Check, ArrowRight, Sparkles } from 'lucide-react';
+import { User, Rocket, Check, ArrowRight, Sparkles } from 'lucide-react';
 
 export default function RoleSelection() {
   const router = useRouter();
@@ -35,15 +35,8 @@ export default function RoleSelection() {
       desc: 'Build your venture, hire top talent, connect with investors and mentors.',
       icon: Rocket,
       features: ['Fundraising', 'Talent Acquisition', 'Mentorship']
-    },
-    {
-      id: 'investor',
-      title: 'Investor',
-      subtitle: 'Angel & VC',
-      desc: 'Discover promising startups, mentor founders, and invest in innovative ideas.',
-      icon: TrendingUp,
-      features: ['Deal Flow', 'Portfolio Management', 'Due Diligence']
     }
+    // Investor role has been removed
   ];
 
   const handleContinue = () => {
@@ -66,7 +59,7 @@ export default function RoleSelection() {
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: colorScheme.background }}>
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8">
         {/* Header Section */}
         <div className="mb-12">
           <div className="bg-white border border-gray-200 rounded-xl p-8 shadow-sm">
@@ -81,7 +74,7 @@ export default function RoleSelection() {
                       Welcome to Lattis
                     </h1>
                     <p className="text-lg" style={{ color: colorScheme.secondary }}>
-                      Join the future of professional networking
+                      Where Students Validate Startup Ideas
                     </p>
                   </div>
                 </div>
@@ -100,24 +93,26 @@ export default function RoleSelection() {
 
               {/* Progress Indicator */}
               <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 min-w-[180px]">
-  <div className="space-y-2">
-    <div className="flex justify-between items-center">
-      <span className="text-sm font-medium" style={{ color: colorScheme.secondary }}>
-        Setup Progress
-      </span>
-      <span className="text-sm font-bold" style={{ color: colorScheme.accent }}>
-        1/3
-      </span>
-    </div>
-    <div className="w-full bg-gray-200 rounded-full h-2">
-      <div className="h-2 rounded-full transition-all duration-500" 
-           style={{ width: '33%', backgroundColor: colorScheme.accent }}></div>
-    </div>
-    <p className="text-xs text-gray-500 pt-2">
-      Step 1 of 3: Role Selection
-    </p>
-  </div>
-</div>
+                <div className="space-y-2">
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm font-medium" style={{ color: colorScheme.secondary }}>
+                      Setup Progress
+                    </span>
+                    <span className="text-sm font-bold" style={{ color: colorScheme.accent }}>
+                      1/3
+                    </span>
+                  </div>
+                  <div className="w-full bg-gray-200 rounded-full h-2">
+                    <div 
+                      className="h-2 rounded-full transition-all duration-500" 
+                      style={{ width: '33%', backgroundColor: colorScheme.accent }}
+                    ></div>
+                  </div>
+                  <p className="text-xs text-gray-500 pt-2">
+                    Step 1 of 3: Role Selection
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -128,8 +123,10 @@ export default function RoleSelection() {
             <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
               <div className="mb-8">
                 <div className="flex items-center gap-3 mb-2">
-                  <div className="w-10 h-10 rounded-lg flex items-center justify-center" 
-                       style={{ backgroundColor: `${colorScheme.accent}10` }}>
+                  <div 
+                    className="w-10 h-10 rounded-lg flex items-center justify-center" 
+                    style={{ backgroundColor: `${colorScheme.accent}10` }}
+                  >
                     <User className="w-5 h-5" style={{ color: colorScheme.accent }} />
                   </div>
                   <div>
@@ -141,8 +138,8 @@ export default function RoleSelection() {
                 </div>
               </div>
 
-              {/* Role Cards Grid */}
-              <div className="grid md:grid-cols-3 gap-4 mb-8">
+              {/* Role Cards Grid - Now 2 columns for 2 roles */}
+              <div className="grid md:grid-cols-2 gap-4 mb-8">
                 {roles.map((role) => {
                   const Icon = role.icon;
                   const isSelected = selectedRole === role.id;
@@ -249,17 +246,19 @@ export default function RoleSelection() {
                    borderColor: `${colorScheme.accent}20`
                  }}>
               <div className="flex items-start gap-3">
-                <div className="w-6 h-6 rounded flex items-center justify-center" 
-                     style={{ backgroundColor: colorScheme.accent }}>
+                <div 
+                  className="w-6 h-6 rounded flex items-center justify-center" 
+                  style={{ backgroundColor: colorScheme.accent }}
+                >
                   <Check className="w-3 h-3 text-white" />
                 </div>
                 <div>
                   <h4 className="font-semibold text-sm mb-1" style={{ color: colorScheme.primary }}>
-                    Why choose a role?
+                    Focused on Student-Startup Collaboration
                   </h4>
                   <p className="text-sm" style={{ color: colorScheme.secondary }}>
-                    Your role determines the features, content, and community you'll see. 
-                    We'll customize your experience based on your selection.
+                    Lattis connects students with startup founders for validation, testing, and collaboration. 
+                    Your role determines the features and community you'll engage with.
                   </p>
                 </div>
               </div>
@@ -304,8 +303,13 @@ export default function RoleSelection() {
                         <ul className="space-y-2">
                           {selectedRoleData.features.map((feature, index) => (
                             <li key={index} className="flex items-center gap-2">
-                              <div className="w-2 h-2 rounded-full" style={{ backgroundColor: colorScheme.success }}></div>
-                              <span className="text-sm" style={{ color: colorScheme.secondary }}>{feature}</span>
+                              <div 
+                                className="w-2 h-2 rounded-full" 
+                                style={{ backgroundColor: colorScheme.success }}
+                              ></div>
+                              <span className="text-sm" style={{ color: colorScheme.secondary }}>
+                                {feature}
+                              </span>
                             </li>
                           ))}
                         </ul>
@@ -314,16 +318,20 @@ export default function RoleSelection() {
 
                     <div className="p-5 rounded-lg border border-gray-100">
                       <h5 className="text-sm font-medium mb-4" style={{ color: colorScheme.primary }}>
-                        Community Overview
+                        Platform Overview
                       </h5>
                       <div className="grid grid-cols-2 gap-4">
                         <div className="text-center p-3 bg-gray-50 rounded-lg">
-                          <div className="text-lg font-bold" style={{ color: colorScheme.primary }}>10K+</div>
-                          <div className="text-xs text-gray-500">Active Members</div>
+                          <div className="text-lg font-bold" style={{ color: colorScheme.primary }}>
+                            5K+
+                          </div>
+                          <div className="text-xs text-gray-500">Student Validators</div>
                         </div>
                         <div className="text-center p-3 bg-gray-50 rounded-lg">
-                          <div className="text-lg font-bold" style={{ color: colorScheme.primary }}>500+</div>
-                          <div className="text-xs text-gray-500">Monthly Connections</div>
+                          <div className="text-lg font-bold" style={{ color: colorScheme.primary }}>
+                            200+
+                          </div>
+                          <div className="text-xs text-gray-500">Active Startups</div>
                         </div>
                       </div>
                     </div>

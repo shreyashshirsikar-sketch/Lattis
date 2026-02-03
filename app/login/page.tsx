@@ -1,4 +1,3 @@
-// app/login/page.tsx
 'use client';
 
 import { useState } from 'react';
@@ -14,7 +13,6 @@ import {
   CheckCircle,
   Twitter,
   Linkedin,
-  ArrowRight,
   ChevronRight
 } from 'lucide-react';
 
@@ -44,12 +42,12 @@ export default function LoginPage() {
   };
 
   const benefits = [
-    "Access your personalized dashboard",
-    "View matched opportunities",
-    "Continue ongoing conversations",
-    "Track application progress",
-    "Manage profile and preferences",
-    "Join upcoming events and webinars"
+    "Professionals: Find projects, build portfolio",
+    "Startups: Find talent, get feedback",
+    "Investors: Discover startups, track progress",
+    "Incubators: Support portfolio, connect mentors",
+    "Update your profile and preferences",
+    "Stay updated on platform progress"
   ];
 
   return (
@@ -99,14 +97,14 @@ export default function LoginPage() {
                   </div>
                   
                   <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4 leading-snug">
-                    Continue your<br />
-                    <span className="text-[#7373D7] bg-gradient-to-r from-[#7373D7] to-[#6363C7] bg-clip-text text-transparent">
-                      startup journey
+                    Continue building<br />
+                    <span className="bg-gradient-to-r from-[#7373D7] to-[#6363C7] bg-clip-text text-transparent">
+                      your future
                     </span>
                   </h1>
                   
                   <p className="text-gray-600 text-lg leading-relaxed">
-                    Sign in to access your personalized dashboard, opportunities, and connections.
+                    Sign in to access your dashboard, discover opportunities, and connect with the right people.
                   </p>
                 </div>
               </div>
@@ -114,7 +112,7 @@ export default function LoginPage() {
               {/* Benefits List */}
               <div className="mb-12">
                 <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wider mb-6">
-                  When you sign in
+                  What you can do on Lattis
                 </h3>
                 <div className="space-y-3.5">
                   {benefits.map((benefit, index) => (
@@ -126,19 +124,19 @@ export default function LoginPage() {
                 </div>
               </div>
 
-              {/* Testimonial */}
+              {/* Early Access Callout */}
               <div className="bg-gray-50 rounded-xl p-6 border border-gray-200">
                 <div className="flex items-center gap-4 mb-4">
-                  <div className="w-10 h-10 bg-gradient-to-br from-gray-900 to-gray-800 rounded-full flex items-center justify-center">
-                    <span className="text-white font-medium text-sm">RJ</span>
+                  <div className="w-10 h-10 bg-gradient-to-br from-[#7373D7] to-[#6363C7] rounded-full flex items-center justify-center">
+                    <span className="text-white font-medium text-sm">LT</span>
                   </div>
                   <div>
-                    <h4 className="font-medium text-gray-900">Rebecca Johnson</h4>
-                    <p className="text-sm text-gray-500">Product Design Intern</p>
+                    <h4 className="font-medium text-gray-900">Be part of building Lattis</h4>
+                    <p className="text-sm text-gray-500">Join our early community and help shape the platform</p>
                   </div>
                 </div>
-                <p className="text-gray-600 text-sm leading-relaxed italic">
-                  "The connections I made through Lattis led to my dream internship. The platform makes networking feel natural and productive."
+                <p className="text-gray-600 text-sm leading-relaxed">
+                  We're creating a platform to connect early-stage innovators. Have questions? hello@lattis.com
                 </p>
               </div>
             </div>
@@ -243,22 +241,22 @@ export default function LoginPage() {
                   </div>
 
                   <button
-  type="submit"
-  disabled={isLoading}
-  className="w-full flex justify-center items-center gap-2 py-3 px-4 bg-[#7373D7] text-white rounded-lg hover:bg-[#6363C7] font-medium text-sm transition-colors disabled:opacity-70 disabled:cursor-not-allowed group"
->
-  {isLoading ? (
-    <>
-      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-      Signing in...
-    </>
-  ) : (
-    <>
-      Sign In
-      <ChevronRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
-    </>
-  )}
-</button>
+                    type="submit"
+                    disabled={isLoading}
+                    className="w-full flex justify-center items-center gap-2 py-3 px-4 bg-[#7373D7] text-white rounded-lg hover:bg-[#6363C7] font-medium text-sm transition-colors disabled:opacity-70 disabled:cursor-not-allowed group"
+                  >
+                    {isLoading ? (
+                      <>
+                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                        Signing in...
+                      </>
+                    ) : (
+                      <>
+                        Sign In
+                        <ChevronRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
+                      </>
+                    )}
+                  </button>
                 </form>
 
                 {/* Divider */}

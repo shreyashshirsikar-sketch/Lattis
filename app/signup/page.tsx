@@ -99,12 +99,10 @@ export default function SignupPage() {
   };
 
   const benefits = [
-    "Connect directly with startups and investors",
-    "Access exclusive opportunities and internships",
-    "Build your professional network",
-    "Get matched with relevant projects",
-    "Receive personalized recommendations",
-    "Track your progress and growth"
+    "Professionals: Gain hands-on experience, build portfolio, connect with founders",
+    "Startups: Find co-founders, validate ideas, connect with investors",
+    "Investors: Access startup pipeline, evaluate teams, track progress",
+    "Incubators: Discover startups, support portfolio, connect with mentors",
   ];
 
   return (
@@ -156,13 +154,12 @@ export default function SignupPage() {
                   <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4 leading-snug">
                     Join the future of<br />
                     <span className="bg-gradient-to-r from-[#7373D7] to-[#6363C7] bg-clip-text text-transparent">
-                      startup collaboration
+                      early-stage innovation
                     </span>
                   </h1>
                   
                   <p className="text-gray-600 text-lg leading-relaxed">
-                    Create your account and unlock access to a world of opportunities, connections, and growth.
-                  </p>
+Create your Lattis account to connect with startups, professionals, investors, and incubators. Get access to real projects, funding opportunities, and the right people to build what's next.                  </p>
                 </div>
               </div>
 
@@ -181,19 +178,19 @@ export default function SignupPage() {
                 </div>
               </div>
 
-              {/* Testimonial */}
+              {/* Fixed: Early Access Callout - REPLACED TESTIMONIAL */}
               <div className="bg-gray-50 rounded-xl p-6 border border-gray-200">
                 <div className="flex items-center gap-4 mb-4">
-                  <div className="w-10 h-10 bg-gradient-to-br from-gray-900 to-gray-800 rounded-full flex items-center justify-center">
-                    <span className="text-white font-medium text-sm">AS</span>
+                  <div className="w-10 h-10 bg-gradient-to-br from-[#7373D7] to-[#6363C7] rounded-full flex items-center justify-center">
+                    <span className="text-white font-medium text-sm">LT</span>
                   </div>
                   <div>
-                    <h4 className="font-medium text-gray-900">Alex Morgan</h4>
-                    <p className="text-sm text-gray-500">Co-founder @ Fintech Startup</p>
+                    <h4 className="font-medium text-gray-900">Be part of building Lattis</h4>
+                    <p className="text-sm text-gray-500">Join our early community and help shape the platform</p>
                   </div>
                 </div>
-                <p className="text-gray-600 text-sm leading-relaxed italic">
-                  "Lattis transformed how we find talent. We connected with brilliant students who are now integral to our team's success."
+                <p className="text-gray-600 text-sm leading-relaxed">
+                  We're creating a platform to connect early-stage innovators. Have questions? hello@lattis.in
                 </p>
               </div>
             </div>
