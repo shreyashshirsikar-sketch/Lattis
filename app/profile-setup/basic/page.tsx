@@ -44,23 +44,33 @@ export default function BasicProfile() {
 
   // Load saved data if exists
   useEffect(() => {
-    const savedData = localStorage.getItem('profileData');
-    const savedRole = localStorage.getItem('selectedRole');
-    
-    if (savedData) {
-      try {
-        const data = JSON.parse(savedData);
-        setForm(prev => ({ ...prev, ...data }));
-        if (data.photo) setPhotoPreview(data.photo);
-      } catch (error) {
-        console.error('Failed to parse saved data:', error);
-      }
+  const isAuthenticated = localStorage.getItem('isAuthenticated');
+  if (!isAuthenticated) {
+    router.push('/login');
+    return;
+  }
+
+  const savedData = localStorage.getItem('profileData');
+  const savedRole = localStorage.getItem('selectedRole');
+  
+  if (savedData) {
+    try {
+      const data = JSON.parse(savedData);
+      setForm(prev => ({ ...prev, ...data }));
+      if (data.photo) setPhotoPreview(data.photo);
+    } catch (error) {
+      console.error('Failed to parse saved data:', error);
     }
-    
-    if (!role && savedRole) {
-      router.replace(`/profile-setup/basic?role=${savedRole}`);
-    }
-  }, [role, router]);
+  }
+  
+  // If role is not in URL but exists in localStorage, redirect with role
+  if (!role && savedRole) {
+    router.replace(`/profile-setup/basic?role=${savedRole}`);
+  } else if (!role && !savedRole) {
+    // If no role at all, go back to role selection
+    router.push('/profile-setup');
+  }
+}, [role, router]);
 
   // Handle photo upload
   const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
