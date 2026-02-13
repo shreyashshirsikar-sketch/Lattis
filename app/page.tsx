@@ -137,7 +137,7 @@ export default function Home() {
                 How it works
               </button>
               
-              {/* For Professionals link */}
+              {/* For Students link */}
               <button
                 onClick={() => scrollToSection('for-students')}
                 className="text-sm text-gray-600 hover:text-[#7373D7] transition-colors cursor-pointer"
@@ -153,24 +153,6 @@ export default function Home() {
                 For Startups
               </button>
               
-<<<<<<< HEAD
-=======
-              {/* For Investors link */}
-              <button
-                onClick={() => scrollToSection('for-investors')}
-                className="text-sm text-gray-600 hover:text-[#7373D7] transition-colors cursor-pointer"
-              >
-                For Investors
-              </button>
-              
-              {/* For Incubators link */}
-              <button
-                onClick={() => scrollToSection('for-incubators')}
-                className="text-sm text-gray-600 hover:text-[#7373D7] transition-colors cursor-pointer"
-              >
-                For Incubators
-              </button>
->>>>>>> 9bd55e30d636215bb1b0885eb3efc33a9d61e12d
             </nav>
 
             <div className="hidden md:flex items-center space-x-4">
@@ -209,20 +191,12 @@ export default function Home() {
                   How it works
                 </button>
                 
-<<<<<<< HEAD
                 {/* For Users link */}
-=======
-                {/* For Professionals link */}
->>>>>>> 9bd55e30d636215bb1b0885eb3efc33a9d61e12d
                 <button
                   onClick={() => scrollToSection('for-Users')}
                   className="block w-full text-left py-2 text-gray-600 hover:text-[#7373D7]"
                 >
-<<<<<<< HEAD
                   For Students
-=======
-                  For Professionals
->>>>>>> 9bd55e30d636215bb1b0885eb3efc33a9d61e12d
                 </button>
                 
                 {/* For Startups link */}
@@ -233,34 +207,16 @@ export default function Home() {
                   For Startups
                 </button>
                 
-                {/* For Investors link */}
-                <button
-                  onClick={() => scrollToSection('for-investors')}
-                  className="block w-full text-left py-2 text-gray-600 hover:text-[#7373D7]"
-                >
-                  For Investors
-                </button>
-                
-                {/* For Incubators link */}
-                <button
-                  onClick={() => scrollToSection('for-incubators')}
-                  className="block w-full text-left py-2 text-gray-600 hover:text-[#7373D7]"
-                >
-                  For Incubators
-                </button>
-                
                 <div className="pt-4 space-y-3 border-t border-gray-100">
                   <Link
                     href="/login"
                     className="block py-2.5 text-center text-gray-600 border border-gray-200 rounded-lg"
-                    onClick={() => setIsMenuOpen(false)}
                   >
                     Log in
                   </Link>
                   <Link
                     href="/signup"
                     className="block py-2.5 text-center bg-[#7373D7] text-white rounded-lg"
-                    onClick={() => setIsMenuOpen(false)}
                   >
                     Get started
                   </Link>
@@ -354,84 +310,85 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Who it's for */}
-        <section className="py-20 bg-gray-50">
-          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-16">
-              <h2 className="text-3xl font-bold text-gray-900 mb-4">
-                Built for every stage of innovation
-              </h2>
-              <p className="text-gray-600 max-w-2xl mx-auto">
-                Different roles, shared mission. We're building specific tools for each part of the early-stage ecosystem.
-              </p>
+{/* Who it's for */}
+<section className="py-20 bg-gray-50">
+  <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="text-center mb-16">
+      <h2 className="text-3xl font-bold text-gray-900 mb-4">
+        Built for every stage of innovation
+      </h2>
+      <p className="text-gray-600 max-w-2xl mx-auto">
+        Different roles, shared mission. We're building specific tools for each part of the early-stage ecosystem.
+      </p>
+    </div>
+  
+    <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+      {roles.map((role, index) => {
+        const Icon = role.icon;
+        return (
+          <div
+            key={index}
+            className="bg-white rounded-2xl p-8 border border-gray-100 hover:border-[#7373D7]/30 transition-all duration-300 hover:shadow-lg"
+          >
+            <div className="w-14 h-14 bg-gradient-to-br from-[#7373D7] to-[#6363C7] rounded-xl flex items-center justify-center mb-8">
+              <Icon className="w-7 h-7 text-white" />
             </div>
-          
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-              {roles.map((role, index) => {
-                const Icon = role.icon;
-                return (
-                  <div
-                    key={index}
-                    className="bg-white rounded-2xl p-8 border border-gray-100 hover:border-[#7373D7]/30 transition-all duration-300 hover:shadow-lg"
-                  >
-                    <div className="w-14 h-14 bg-gradient-to-br from-[#7373D7] to-[#6363C7] rounded-xl flex items-center justify-center mb-8">
-                      <Icon className="w-7 h-7 text-white" />
-                    </div>
-                    <h3 className="text-xl font-semibold text-gray-900 mb-4">{role.title}</h3>
-                    <p className="text-gray-600 mb-6 text-sm leading-relaxed">{role.description}</p>
-                    <ul className="space-y-3">
-                      {role.points.map((point, i) => (
-                        <li key={i} className="flex items-center gap-3 text-gray-700">
-                          <Check className="w-4 h-4 text-[#7373D7]" />
-                          <span className="text-sm">{point}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                );
-              })}
-            </div>
+            <h3 className="text-xl font-semibold text-gray-900 mb-4">{role.title}</h3>
+            <p className="text-gray-600 mb-6 text-sm leading-relaxed">{role.description}</p>
+            <ul className="space-y-3">
+              {role.points.map((point, i) => (
+                <li key={i} className="flex items-center gap-3 text-gray-700">
+                  <Check className="w-4 h-4 text-[#7373D7]" />
+                  <span className="text-sm">{point}</span>
+                </li>
+              ))}
+            </ul>
           </div>
-        </section>
+        );
+      })}
+    </div>
+  </div>
+</section>
 
         {/* How it works */}
-        <section id="how-it-works" className="py-20 bg-white">
-          <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-16">
-              <h2 className="text-3xl font-bold text-gray-900 mb-4">
-                How Lattis Works
-              </h2>
-              <p className="text-gray-600 max-w-2xl mx-auto">
-                A simple process designed for action and meaningful connections.
-              </p>
+<section id="how-it-works" className="py-20 bg-white">
+  <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="text-center mb-16">
+      <h2 className="text-3xl font-bold text-gray-900 mb-4">
+        How Lattis Works
+      </h2>
+      <p className="text-gray-600 max-w-2xl mx-auto">
+        A simple process designed for action and meaningful connections.
+      </p>
+    </div>
+
+    <div className="grid md:grid-cols-3 gap-12">
+      {steps.map((step) => {
+        const Icon = step.icon;
+        return (
+          <div key={step.title} className="text-center">
+            
+            {/* Icon */}
+            <div className="w-16 h-16 bg-[#7373D7]/10 rounded-xl flex items-center justify-center mx-auto mb-6">
+              <Icon className="w-7 h-7 text-[#7373D7]" />
             </div>
 
-            <div className="grid md:grid-cols-3 gap-12">
-              {steps.map((step) => {
-                const Icon = step.icon;
-                return (
-                  <div key={step.title} className="text-center">
-                    
-                    {/* Icon */}
-                    <div className="w-16 h-16 bg-[#7373D7]/10 rounded-xl flex items-center justify-center mx-auto mb-6">
-                      <Icon className="w-7 h-7 text-[#7373D7]" />
-                    </div>
+            {/* Title */}
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">
+              {step.title}
+            </h3>
 
-                    {/* Title */}
-                    <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                      {step.title}
-                    </h3>
-
-                    {/* Description */}
-                    <p className="text-gray-600 text-sm leading-relaxed">
-                      {step.description}
-                    </p>
-                  </div>
-                );
-              })}
-            </div>
+            {/* Description */}
+            <p className="text-gray-600 text-sm leading-relaxed">
+              {step.description}
+            </p>
           </div>
-        </section>
+        );
+      })}
+    </div>
+  </div>
+</section>
+
 
         {/* For Professionals Section */}
         <section id="for-students" className="py-20 bg-gray-50">
@@ -810,7 +767,7 @@ export default function Home() {
                 <h4 className="font-semibold text-gray-200 mb-6">Platform</h4>
                 <ul className="space-y-3">
                   <li><button onClick={() => scrollToSection('how-it-works')} className="text-gray-400 hover:text-white text-sm transition-colors text-left">How it works</button></li>
-                  <li><button onClick={() => scrollToSection('for-students')} className="text-gray-400 hover:text-white text-sm transition-colors text-left">For Professionals</button></li>
+                  <li><button onClick={() => scrollToSection('for-students')} className="text-gray-400 hover:text-white text-sm transition-colors text-left">For Professionals </button></li>
                   <li><button onClick={() => scrollToSection('for-startups')} className="text-gray-400 hover:text-white text-sm transition-colors text-left">For Startups</button></li>
                 </ul>
               </div>
@@ -818,7 +775,6 @@ export default function Home() {
               <div>
                 <h4 className="font-semibold text-gray-200 mb-6">Company</h4>
                 <ul className="space-y-3">
-                  <li><Link href="/" className="text-gray-400 hover:text-white text-sm transition-colors">Home</Link></li>
                   <li><Link href="/about" className="text-gray-400 hover:text-white text-sm transition-colors">About</Link></li>
                   <li><Link href="/careers" className="text-gray-400 hover:text-white text-sm transition-colors">Careers</Link></li>
                   <li><Link href="/blog" className="text-gray-400 hover:text-white text-sm transition-colors">Blog</Link></li>
